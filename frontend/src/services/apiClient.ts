@@ -1,0 +1,121 @@
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  withCredentials: true,
+  headers: { 'Content-Type': 'application/json' }
+});
+
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+// Request interceptor: attach access token
+api.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
+
+// Response interceptor: handle token refresh
+api.interceptors.response.use(
+  response => response.data,
+  async error => {
+    const originalRequest = error.config;
+    
+    // If 401 and not already retrying
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Queue this request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        });
+      }
+      
+      originalRequest._retry = true;
+      isRefreshing = true;
+      
+      try {
+        // Try to refresh token
+        const response = await axios.post(
+          `${api.defaults.baseURL}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+        
+        const { accessToken } = response.data.data;
+        localStorage.setItem('access_token', accessToken);
+        
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        processQueue(null, accessToken);
+        
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        localStorage.removeItem('access_token');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+    
+    return Promise.reject(error.response?.data || error);
+  }
+);
+
+// Auth API
+export const authApi = {
+  login: (username: string, password: string) =>
+    api.post('/auth/login', { username, password }),
+  
+  logout: () => api.post('/auth/logout'),
+  
+  getCurrentUser: () => api.get('/auth/me'),
+  
+  refresh: () => api.post('/auth/refresh')
+};
+
+// Channels API
+export const channelsApi = {
+  getAll: () => api.get('/channels'),
+  
+  add: (channelInput: string) =>
+    api.post('/channels', { channelInput }),
+  
+  remove: (channelId: string) =>
+    api.delete(`/channels/${channelId}`),
+  
+  refresh: (channelId: string) =>
+    api.put(`/channels/${channelId}/refresh`)
+};
+
+// Videos API
+export const videosApi = {
+  getAll: (params?: any) => api.get('/videos', { params }),
+  
+  search: (query: string, params?: any) =>
+    api.get('/videos/search', { params: { q: query, ...params } }),
+  
+  refresh: (channelIds?: string[]) =>
+    api.post('/videos/refresh', { channelIds })
+};
+

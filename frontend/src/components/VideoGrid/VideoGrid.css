@@ -1,0 +1,155 @@
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.skeleton-card {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #e5e5e5;
+  border-radius: 12px;
+}
+
+.skeleton-info {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.skeleton-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+}
+
+.skeleton-text {
+  flex: 1;
+}
+
+.skeleton-title {
+  height: 16px;
+  background-color: #e5e5e5;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-meta {
+  height: 12px;
+  width: 60%;
+  background-color: #e5e5e5;
+  border-radius: 4px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.error-message {
+  text-align: center;
+  padding: 48px 24px;
+  color: #d00;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #606060;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  margin: 0 auto;
+  max-width: 1600px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #e5e5e5;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 4px;
+}
+
+.pagination-number {
+  width: 36px;
+  height: 36px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.pagination-number:hover {
+  background-color: #e5e5e5;
+}
+
+.pagination-number.active {
+  background-color: #065fd4;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .pagination {
+    padding: 16px;
+  }
+  
+  .pagination-numbers {
+    display: none;
+  }
+}
+

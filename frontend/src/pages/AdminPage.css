@@ -1,0 +1,25 @@
+.admin-page {
+  min-height: calc(100vh - 60px);
+  background-color: #f9f9f9;
+}
+
+.admin-header {
+  background-color: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.admin-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 500;
+  color: #030303;
+}
+
+.admin-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #606060;
+}
+
