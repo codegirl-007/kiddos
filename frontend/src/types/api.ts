@@ -49,6 +49,8 @@ export interface ApiResponse<T = any> {
     totalPages?: number;
     hasMore?: boolean;
     oldestCacheAge?: number;
+    cacheStale?: boolean;
+    refreshing?: boolean;
   };
 }
 

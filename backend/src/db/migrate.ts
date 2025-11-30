@@ -94,6 +94,7 @@ const migrations = [
       await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('videos_per_channel', '50')`);
       await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('pagination_size', '12')`);
       await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('initial_setup_complete', 'false')`);
+      await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('refresh_in_progress', 'false')`);
     }
   }
 ];

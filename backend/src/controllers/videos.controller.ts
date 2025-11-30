@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { AuthRequest } from '../types/index.js';
-import { db } from '../config/database.js';
+import { db, getSetting } from '../config/database.js';
 import { formatDuration } from '../services/youtube.service.js';
-import { refreshMultipleChannels } from '../services/cache.service.js';
+import { refreshMultipleChannels, isRefreshInProgress, setRefreshInProgress } from '../services/cache.service.js';
 
 export async function getAllVideos(req: AuthRequest, res: Response) {
   try {
@@ -72,6 +72,17 @@ export async function getAllVideos(req: AuthRequest, res: Response) {
       oldestCacheAge = Math.floor((Date.now() - oldestFetch.getTime()) / 60000);
     }
     
+    // Check cache age and trigger refresh if needed
+    const cacheDuration = parseInt((await getSetting('cache_duration_minutes')) || '60');
+    const cacheExpired = oldestCacheAge > cacheDuration;
+    const refreshInProgress = await isRefreshInProgress();
+    
+    // Trigger async refresh if cache is expired and not already refreshing
+    if (cacheExpired && !refreshInProgress) {
+      // Fire and forget - don't await
+      refreshAllChannelsAsync();
+    }
+    
     const videos = videosResult.rows.map(row => ({
       id: row.id,
       channelId: row.channel_id,
@@ -96,7 +107,9 @@ export async function getAllVideos(req: AuthRequest, res: Response) {
         total,
         totalPages: Math.ceil(total / limitNum),
         hasMore: offset + videos.length < total,
-        oldestCacheAge
+        oldestCacheAge,
+        cacheStale: cacheExpired,
+        refreshing: refreshInProgress
       }
     });
   } catch (error: any) {
@@ -154,6 +167,26 @@ export async function refreshVideos(req: AuthRequest, res: Response) {
         message: 'Error refreshing videos'
       }
     });
+  }
+}
+
+async function refreshAllChannelsAsync() {
+  try {
+    await setRefreshInProgress(true);
+    
+    // Get all channel IDs
+    const channels = await db.execute('SELECT id FROM channels');
+    const channelIds = channels.rows.map(row => row.id as string);
+    
+    if (channelIds.length > 0) {
+      console.log(`[AUTO-REFRESH] Starting refresh of ${channelIds.length} channels...`);
+      const result = await refreshMultipleChannels(channelIds, true);
+      console.log(`[AUTO-REFRESH] Complete: ${result.success} succeeded, ${result.failed} failed`);
+    }
+  } catch (error) {
+    console.error('[AUTO-REFRESH] Error:', error);
+  } finally {
+    await setRefreshInProgress(false);
   }
 }
 

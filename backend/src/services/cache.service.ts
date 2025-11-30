@@ -1,5 +1,14 @@
-import { db, getSetting } from '../config/database.js';
+import { db, getSetting, setSetting } from '../config/database.js';
 import { fetchChannelVideos } from './youtube.service.js';
+
+export async function isRefreshInProgress(): Promise<boolean> {
+  const value = await getSetting('refresh_in_progress');
+  return value === 'true';
+}
+
+export async function setRefreshInProgress(inProgress: boolean): Promise<void> {
+  await setSetting('refresh_in_progress', inProgress ? 'true' : 'false');
+}
 
 export async function isCacheValid(channelId: string): Promise<boolean> {
   const result = await db.execute({

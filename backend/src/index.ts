@@ -35,8 +35,8 @@ async function startServer() {
     app.use(cookieParser());
     app.use('/api', apiLimiter);
     
-    // Health check
-    app.get('/health', (req, res) => {
+    // Health check (for DigitalOcean)
+    app.get('/api/health', (req, res) => {
       res.json({ status: 'ok', timestamp: new Date().toISOString() });
     });
     

@@ -208,7 +208,17 @@ The app caches videos for 1 hour by default to minimize API usage.
 
 ## Production Deployment
 
-### Backend
+### Deploy to DigitalOcean (Recommended - $5/month)
+
+**Quick Start**: See [QUICKSTART.md](./QUICKSTART.md) for a 10-minute deployment guide.
+
+**Detailed Guide**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete deployment instructions, troubleshooting, and monitoring.
+
+The app is pre-configured for one-click deployment to DigitalOcean's App Platform using the included `.do/app.yaml` configuration.
+
+### Manual Deployment
+
+#### Backend
 1. Build: `npm run build`
 2. Start: `npm start`
 3. Use PM2 or systemd for process management
@@ -216,7 +226,7 @@ The app caches videos for 1 hour by default to minimize API usage.
 5. Use nginx as reverse proxy
 6. Set up SSL certificate (Let's Encrypt)
 
-### Frontend
+#### Frontend
 1. Build: `npm run build`
 2. Serve `dist` folder via nginx or CDN
 3. Update `VITE_API_URL` to production backend URL

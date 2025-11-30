@@ -1,18 +1,20 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useVideos } from '../hooks/useVideos';
-import { useChannels } from '../hooks/useChannels';
 import { VideoGrid } from '../components/VideoGrid/VideoGrid';
 import { VideoPlayer } from '../components/VideoPlayer/VideoPlayer';
-import { SearchFilter } from '../components/SearchFilter/SearchFilter';
 
 export function HomePage() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<'newest' | 'oldest' | 'popular'>('newest');
-  const [selectedChannel, setSelectedChannel] = useState<string | undefined>();
+  const [searchParams] = useSearchParams();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   
-  const { videos, loading, error, meta } = useVideos({
+  // Read from URL query params
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const search = searchParams.get('search') || '';
+  const sort = (searchParams.get('sort') || 'newest') as 'newest' | 'oldest' | 'popular';
+  const selectedChannel = searchParams.get('channel') || undefined;
+  
+  const { videos, loading, error, meta, refreshing } = useVideos({
     page,
     limit: 12,
     search: search || undefined,
@@ -20,37 +22,30 @@ export function HomePage() {
     channelId: selectedChannel
   });
   
-  const { channels } = useChannels();
-  
-  const handleSearch = (query: string) => {
-    setSearch(query);
-    setPage(1);
-  };
-  
-  const handleSortChange = (newSort: 'newest' | 'oldest' | 'popular') => {
-    setSort(newSort);
-    setPage(1);
-  };
-  
-  const handleChannelChange = (channelId: string | undefined) => {
-    setSelectedChannel(channelId);
-    setPage(1);
-  };
-  
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('page', newPage.toString());
+    window.history.pushState({}, '', `?${newParams.toString()}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Trigger re-render
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
   
   return (
     <div>
-      <SearchFilter
-        onSearch={handleSearch}
-        onSortChange={handleSortChange}
-        channels={channels}
-        selectedChannel={selectedChannel}
-        onChannelChange={handleChannelChange}
-      />
+      {refreshing && (
+        <div style={{
+          padding: '12px',
+          backgroundColor: '#e3f2fd',
+          border: '1px solid #2196f3',
+          borderRadius: '4px',
+          margin: '16px 24px',
+          textAlign: 'center',
+          color: '#1976d2'
+        }}>
+          🔄 Fetching latest videos from YouTube...
+        </div>
+      )}
       
       <VideoGrid
         videos={videos}
