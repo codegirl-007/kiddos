@@ -68,3 +68,4 @@ static_sites:
 
     routes:
       - path: /
+

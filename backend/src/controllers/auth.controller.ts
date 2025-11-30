@@ -151,6 +151,16 @@ export async function logout(req: AuthRequest, res: Response) {
 
 export async function getCurrentUser(req: AuthRequest, res: Response) {
   try {
+    if (!req.userId) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated'
+        }
+      });
+    }
+
     const result = await db.execute({
       sql: 'SELECT id, username, last_login FROM users WHERE id = ?',
       args: [req.userId]
@@ -187,4 +197,5 @@ export async function getCurrentUser(req: AuthRequest, res: Response) {
     });
   }
 }
+
 

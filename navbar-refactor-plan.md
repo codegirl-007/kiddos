@@ -226,3 +226,4 @@ But this requires lifting state to App level and prop drilling.
 **Estimated time:** 30-45 minutes
 **Complexity:** Medium (URL params + responsive styling)
 
+

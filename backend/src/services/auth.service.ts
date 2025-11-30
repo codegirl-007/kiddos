@@ -9,7 +9,7 @@ export async function createTokens(userId: number, username: string) {
   const accessToken = jwt.sign(
     { userId, username, type: 'access' },
     env.jwtSecret,
-    { expiresIn: env.accessTokenExpiry }
+    { expiresIn: env.accessTokenExpiry as string }
   );
   
   // Refresh token (long-lived)
@@ -17,7 +17,7 @@ export async function createTokens(userId: number, username: string) {
   const refreshToken = jwt.sign(
     { token: refreshTokenValue, userId, type: 'refresh' },
     env.jwtRefreshSecret,
-    { expiresIn: env.refreshTokenExpiry }
+    { expiresIn: env.refreshTokenExpiry as string }
   );
   
   // Store refresh token in database
@@ -59,7 +59,7 @@ export async function refreshAccessToken(refreshToken: string) {
     const accessToken = jwt.sign(
       { userId: tokenData.user_id, username: tokenData.username, type: 'access' },
       env.jwtSecret,
-      { expiresIn: env.accessTokenExpiry }
+      { expiresIn: env.accessTokenExpiry as string }
     );
     
     return { accessToken };
@@ -89,4 +89,5 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
 }
+
 
