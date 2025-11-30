@@ -45,7 +45,7 @@ services:
         value: ${INITIAL_ADMIN_PASSWORD}
         type: SECRET
       - key: CORS_ORIGIN
-        value: ${APP_URL}
+        value: ${frontend.PUBLIC_URL}
 
     health_check:
       http_path: /api/health
@@ -64,8 +64,10 @@ static_sites:
 
     envs:
       - key: VITE_API_URL
-        value: ${backend.PUBLIC_URL}
+        value: ${backend.PUBLIC_URL}/api
 
     routes:
       - path: /
+    
+    catchall_document: index.html
 
