@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { env } from '../config/env.js';
@@ -8,16 +8,16 @@ export async function createTokens(userId: number, username: string) {
   // Access token (short-lived)
   const accessToken = jwt.sign(
     { userId, username, type: 'access' },
-    env.jwtSecret,
-    { expiresIn: env.accessTokenExpiry as string }
+    env.jwtSecret as Secret,
+    { expiresIn: env.accessTokenExpiry } as SignOptions
   );
   
   // Refresh token (long-lived)
   const refreshTokenValue = crypto.randomBytes(64).toString('hex');
   const refreshToken = jwt.sign(
     { token: refreshTokenValue, userId, type: 'refresh' },
-    env.jwtRefreshSecret,
-    { expiresIn: env.refreshTokenExpiry as string }
+    env.jwtRefreshSecret as Secret,
+    { expiresIn: env.refreshTokenExpiry } as SignOptions
   );
   
   // Store refresh token in database
@@ -58,8 +58,8 @@ export async function refreshAccessToken(refreshToken: string) {
     // Generate new access token
     const accessToken = jwt.sign(
       { userId: tokenData.user_id, username: tokenData.username, type: 'access' },
-      env.jwtSecret,
-      { expiresIn: env.accessTokenExpiry as string }
+      env.jwtSecret as Secret,
+      { expiresIn: env.accessTokenExpiry } as SignOptions
     );
     
     return { accessToken };
