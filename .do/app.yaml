@@ -6,19 +6,19 @@ services:
   - name: backend
     source_dir: backend
     github:
-      repo: YOUR_GITHUB_USERNAME/kiddos
+      repo: codegirl-007/kiddos
       branch: main
       deploy_on_push: true
-    
+
     build_command: npm install && npm run build
     run_command: npm run migrate && npm start
-    
+
     environment_slug: node-js
     instance_size_slug: basic-xxs
     instance_count: 1
-    
+
     http_port: 3000
-    
+
     envs:
       - key: NODE_ENV
         value: production
@@ -46,7 +46,7 @@ services:
         type: SECRET
       - key: CORS_ORIGIN
         value: ${APP_URL}
-    
+
     health_check:
       http_path: /api/health
 
@@ -58,14 +58,13 @@ static_sites:
       repo: YOUR_GITHUB_USERNAME/kiddos
       branch: main
       deploy_on_push: true
-    
+
     build_command: npm install && npm run build
     output_dir: dist
-    
+
     envs:
       - key: VITE_API_URL
         value: ${backend.PUBLIC_URL}
-    
+
     routes:
       - path: /
-
