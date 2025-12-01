@@ -1,7 +1,6 @@
 name: kiddos
 region: nyc
 
-# Backend Service
 services:
   - name: backend
     source_dir: backend
@@ -16,8 +15,10 @@ services:
     environment_slug: node-js
     instance_size_slug: basic-xxs
     instance_count: 1
-
     http_port: 3000
+
+    routes:
+      - path: /api
 
     envs:
       - key: NODE_ENV
@@ -50,7 +51,6 @@ services:
     health_check:
       http_path: /api/health
 
-# Frontend Static Site
 static_sites:
   - name: frontend
     source_dir: frontend
@@ -61,10 +61,11 @@ static_sites:
 
     build_command: npm install && npm run build
     output_dir: dist
+    catchall_document: index.html
+
+    routes:
+      - path: /
 
     envs:
       - key: VITE_API_URL
         value: ${backend.PUBLIC_URL}/api
-
-    catchall_document: index.html
-
