@@ -1,20 +1,6 @@
 name: kiddos
 region: nyc
 
-# Ingress rules to route traffic properly
-ingress:
-  rules:
-    - match:
-        path:
-          prefix: /api
-      component:
-        name: backend
-    - match:
-        path:
-          prefix: /
-      component:
-        name: frontend
-
 # Backend Service
 services:
   - name: backend
@@ -59,7 +45,7 @@ services:
         value: ${INITIAL_ADMIN_PASSWORD}
         type: SECRET
       - key: CORS_ORIGIN
-        value: ${APP_URL}
+        value: ${frontend.PUBLIC_URL}
 
     health_check:
       http_path: /api/health
@@ -78,7 +64,7 @@ static_sites:
 
     envs:
       - key: VITE_API_URL
-        value: ${APP_URL}/api
+        value: ${backend.PUBLIC_URL}/api
 
     catchall_document: index.html
 
