@@ -1,71 +1,87 @@
+domains:
+- domain: rainbowscupcakesandunicorns.com
+  type: PRIMARY
+  zone: rainbowscupcakesandunicorns.com
+- domain: www.rainbowscupcakesandunicorns.com
+  type: ALIAS
+  zone: rainbowscupcakesandunicorns.com
+ingress:
+  rules:
+  - component:
+      name: backend
+    match:
+      path:
+        prefix: /api
+  - component:
+      name: frontend
+    match:
+      path:
+        prefix: /
 name: kiddos
 region: nyc
-
 services:
-  - name: backend
-    source_dir: backend
-    github:
-      repo: codegirl-007/kiddos
-      branch: master
-      deploy_on_push: true
-
-    build_command: npm install && npm run build
-    run_command: npm start
-
-    environment_slug: node-js
-    instance_size_slug: basic-xxs
-    instance_count: 1
-    http_port: 3000
-
-    routes:
-      - path: /api
-
-    envs:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: "3000"
-      - key: TURSO_URL
-        value: ${TURSO_URL}
-        type: SECRET
-      - key: TURSO_AUTH_TOKEN
-        value: ${TURSO_AUTH_TOKEN}
-        type: SECRET
-      - key: YOUTUBE_API_KEY
-        value: ${YOUTUBE_API_KEY}
-        type: SECRET
-      - key: JWT_SECRET
-        value: ${JWT_SECRET}
-        type: SECRET
-      - key: JWT_REFRESH_SECRET
-        value: ${JWT_REFRESH_SECRET}
-        type: SECRET
-      - key: INITIAL_ADMIN_USERNAME
-        value: ${INITIAL_ADMIN_USERNAME}
-      - key: INITIAL_ADMIN_PASSWORD
-        value: ${INITIAL_ADMIN_PASSWORD}
-        type: SECRET
-      - key: CORS_ORIGIN
-        value: ${frontend.PUBLIC_URL}
-
-    health_check:
-      http_path: /api/health
-
+- build_command: npm install && npm run build
+  environment_slug: node-js
+  envs:
+  - key: TURSO_URL
+    scope: RUN_AND_BUILD_TIME
+    value: libsql://kiddos-db-stephanie-gredell.aws-us-west-2.turso.io
+  - key: TURSO_AUTH_TOKEN
+    scope: RUN_AND_BUILD_TIME
+    value: eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQyNjg4NTcsImlkIjoiNzM5M2JhNTYtZWE3Ni00NTMwLWE3NDktNmVjNDhiOGIyODZhIiwicmlkIjoiNGE2ZWRlZTgtYjU2Yy00ZDc4LTk5MzgtZTBkMjExYjNkMjIzIn0.69PsVp6-CE7k2zKe_tpwpfOiWph4vNY6-ZcE2x3OP3n4RiZeHP1C-aVNdo2tZ8t5WvaT0z2HUGrKgO8X50f5Bg
+  - key: YOUTUBE_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: AIzaSyA06ccav0VA4ItxWIx6eG4C0REezbKOS7M
+  - key: JWT_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: your-secret-key-min-32-chars
+  - key: JWT_REFRESH_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: your-refresh-secret-different-from-above
+  - key: PORT
+    scope: RUN_AND_BUILD_TIME
+    value: "8080"
+  - key: CORS_ORIGIN
+    scope: RUN_AND_BUILD_TIME
+    value: https://www.rainbowscupcakesandunicorns.com
+  - key: NODE_ENV
+    scope: RUN_AND_BUILD_TIME
+    value: production
+  - key: ACCESS_TOKEN_EXPIRY
+    scope: RUN_AND_BUILD_TIME
+    value: 15m
+  - key: REFRESH_TOKEN_EXPIRY
+    scope: RUN_AND_BUILD_TIME
+    value: 7d
+  - key: INITIAL_ADMIN_USERNAME
+    scope: RUN_AND_BUILD_TIME
+    value: admin
+  - key: INITIAL_ADMIN_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    value: change-this-secure-password
+  github:
+    branch: master
+    deploy_on_push: true
+    repo: codegirl-007/kiddos
+  health_check:
+    http_path: /api/health
+  http_port: 8080
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: backend
+  run_command: npm start
+  source_dir: backend
 static_sites:
-  - name: frontend
-    source_dir: frontend
-    github:
-      repo: codegirl-007/kiddos
-      branch: master
-      deploy_on_push: true
-
-    build_command: npm install && npm run build
-    output_dir: dist
-    catchall_document: index.html
-
-    routes:
-      - path: /
-
-    envs:
-      - key: VITE_API_URL
-        value: ${backend.PUBLIC_URL}/api
+- build_command: npm install && npm run build
+  catchall_document: index.html
+  envs:
+  - key: VITE_API_URL
+    scope: BUILD_TIME
+    value: https://www.rainbowscupcakesandunicorns.com/api
+  github:
+    branch: master
+    deploy_on_push: true
+    repo: codegirl-007/kiddos
+  name: frontend
+  output_dir: dist
+  source_dir: frontend

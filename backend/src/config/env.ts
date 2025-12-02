@@ -10,7 +10,7 @@ const requiredEnvVars = [
 ] as const;
 
 const optionalEnvVars = {
-  PORT: '3000',
+  PORT: '8080',
   CORS_ORIGIN: 'http://localhost:5173',
   NODE_ENV: 'development',
   ACCESS_TOKEN_EXPIRY: '15m',
@@ -49,7 +49,7 @@ export const env = {
   youtubeApiKey: process.env.YOUTUBE_API_KEY!,
   jwtSecret: process.env.JWT_SECRET!,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
-  port: parseInt(process.env.PORT || '3000'),
+  port: parseInt(process.env.PORT || '8080'),
   corsOrigin: process.env.CORS_ORIGIN!,
   nodeEnv: process.env.NODE_ENV!,
   accessTokenExpiry: process.env.ACCESS_TOKEN_EXPIRY!,
