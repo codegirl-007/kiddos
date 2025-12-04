@@ -33,19 +33,6 @@ export function HomePage() {
   
   return (
     <div>
-      {refreshing && (
-        <div style={{
-          padding: '12px',
-          backgroundColor: '#e3f2fd',
-          border: '1px solid #2196f3',
-          borderRadius: '4px',
-          margin: '16px 24px',
-          textAlign: 'center',
-          color: '#1976d2'
-        }}>
-          🔄 Fetching latest videos from YouTube...
-        </div>
-      )}
       
       <VideoGrid
         videos={videos}

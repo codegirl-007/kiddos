@@ -64,8 +64,7 @@ export function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <span className="logo-icon">📺</span>
-          <span className="logo-text">Kiddos</span>
+          <span className="logo-text">Rainbows, Cupcakes and Unicorns</span>
         </Link>
         
         <div className="navbar-menu">
@@ -81,7 +80,6 @@ export function Navbar() {
           
           {isAuthenticated ? (
             <div className="navbar-user">
-              <span className="navbar-username">{user?.username}</span>
               <button onClick={handleLogout} className="navbar-button">
                 Logout
               </button>
