@@ -13,7 +13,10 @@ export function useChannels() {
     
     try {
       const response: any = await channelsApi.getAll();
-      setChannels(response.data.channels);
+      const sortedChannels = [...response.data.channels].sort((a: Channel, b: Channel) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+      );
+      setChannels(sortedChannels);
     } catch (err: any) {
       setError(err.error?.message || 'Failed to fetch channels');
     } finally {
