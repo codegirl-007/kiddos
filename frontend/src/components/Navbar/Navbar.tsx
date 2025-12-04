@@ -5,7 +5,7 @@ import { useChannels } from '../../hooks/useChannels';
 import './Navbar.css';
 
 export function Navbar() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { channels } = useChannels();

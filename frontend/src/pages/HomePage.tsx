@@ -14,7 +14,7 @@ export function HomePage() {
   const sort = (searchParams.get('sort') || 'newest') as 'newest' | 'oldest' | 'popular';
   const selectedChannel = searchParams.get('channel') || undefined;
   
-  const { videos, loading, error, meta, refreshing } = useVideos({
+  const { videos, loading, error, meta } = useVideos({
     page,
     limit: 12,
     search: search || undefined,
