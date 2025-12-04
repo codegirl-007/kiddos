@@ -1,5 +1,6 @@
 import { db, getSetting, setSetting } from '../config/database.js';
 import { fetchChannelVideos } from './youtube.service.js';
+import { isoDurationToSeconds } from '../utils/duration.js';
 
 export async function isRefreshInProgress(): Promise<boolean> {
   const value = await getSetting('refresh_in_progress');
@@ -38,15 +39,16 @@ async function updateVideoCache(channelId: string, videos: any[]) {
   
   // Insert new videos
   for (const video of videos) {
+    const durationSeconds = isoDurationToSeconds(video.duration);
     await db.execute({
       sql: `INSERT INTO videos_cache 
             (id, channel_id, title, description, thumbnail_url, 
-             published_at, view_count, like_count, duration)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+             published_at, view_count, like_count, duration, duration_seconds)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         video.id, channelId, video.title, video.description,
         video.thumbnailUrl, video.publishedAt, video.viewCount,
-        video.likeCount, video.duration
+        video.likeCount, video.duration, durationSeconds
       ]
     });
   }

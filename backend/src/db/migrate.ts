@@ -1,4 +1,5 @@
 import { db } from '../config/database.js';
+import { isoDurationToSeconds } from '../utils/duration.js';
 
 const migrations = [
   {
@@ -95,6 +96,44 @@ const migrations = [
       await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('pagination_size', '12')`);
       await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('initial_setup_complete', 'false')`);
       await db.execute(`INSERT OR IGNORE INTO settings (key, value) VALUES ('refresh_in_progress', 'false')`);
+    }
+  },
+  {
+    id: 2,
+    name: 'add_duration_seconds',
+    up: async () => {
+      const columnCheck = await db.execute(`
+        SELECT 1 FROM pragma_table_info('videos_cache')
+        WHERE name = 'duration_seconds'
+      `);
+
+      if (!columnCheck.rows.length) {
+        await db.execute(`
+          ALTER TABLE videos_cache
+          ADD COLUMN duration_seconds INTEGER DEFAULT 0
+        `);
+      }
+
+      const videos = await db.execute(`
+        SELECT id, duration
+        FROM videos_cache
+      `);
+
+      for (const row of videos.rows) {
+        const duration = row.duration as string | null;
+        const seconds = duration ? isoDurationToSeconds(duration) : 0;
+        await db.execute({
+          sql: `UPDATE videos_cache
+                SET duration_seconds = ?
+                WHERE id = ?`,
+          args: [seconds, row.id]
+        });
+      }
+
+      await db.execute(`
+        CREATE INDEX IF NOT EXISTS idx_videos_duration_seconds
+        ON videos_cache(duration_seconds)
+      `);
     }
   }
 ];

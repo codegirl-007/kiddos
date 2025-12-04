@@ -17,7 +17,7 @@ export async function getAllVideos(req: AuthRequest, res: Response) {
     console.log('[CONTROLLER] pageNum:', pageNum, 'limitNum:', limitNum, 'offset:', offset);
     
     // Build query
-    let whereClause = '1=1';
+    let whereClause = 'v.duration_seconds >= 600';
     const args: any[] = [];
     
     if (channelId) {
