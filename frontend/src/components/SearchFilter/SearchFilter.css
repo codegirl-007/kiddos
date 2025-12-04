@@ -1,6 +1,6 @@
 .search-filter {
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #e5e5e5;
+  background-color: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border);
   padding: 16px 24px;
 }
 
@@ -21,29 +21,34 @@
 
 .search-input {
   flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   font-size: 14px;
+  background-color: var(--color-surface);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #065fd4;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(155, 142, 246, 0.25);
 }
 
 .search-button {
-  padding: 8px 16px;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 18px;
+  background: linear-gradient(120deg, var(--color-primary), var(--color-secondary));
+  border: none;
+  border-radius: 999px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.2s;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 12px 22px rgba(242, 107, 164, 0.3);
 }
 
 .search-button:hover {
-  background-color: #e5e5e5;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 24px rgba(242, 107, 164, 0.36);
 }
 
 .filter-controls {
@@ -54,31 +59,35 @@
 
 .filter-select {
   padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   font-size: 14px;
-  background-color: white;
+  background-color: var(--color-surface);
   cursor: pointer;
+  color: var(--color-text);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #065fd4;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(242, 107, 164, 0.25);
 }
 
 .clear-button {
   padding: 8px 12px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   cursor: pointer;
   font-size: 14px;
   white-space: nowrap;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
+  color: var(--color-muted);
 }
 
 .clear-button:hover {
-  background-color: #f2f2f2;
+  background-color: rgba(254, 200, 154, 0.35);
+  color: var(--color-text);
 }
 
 @media (max-width: 768px) {
