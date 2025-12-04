@@ -1,18 +1,17 @@
 :root {
-  --color-bg: #fff8f3;
+  --color-bg: #f6f8fb;
   --color-surface: #ffffff;
-  --color-surface-alt: #ffeef8;
-  --color-surface-muted: #fdf2ff;
-  --color-primary: #f26ba4;
-  --color-primary-dark: #d94f89;
-  --color-secondary: #9b8ef6;
-  --color-secondary-dark: #7a6fe0;
-  --color-accent: #fec89a;
-  --color-mint: #b8f2e6;
-  --color-text: #2c2c3a;
-  --color-muted: #6f6f81;
-  --color-border: #f3d7ec;
-  --color-shadow: rgba(242, 107, 164, 0.18);
+  --color-surface-alt: #f0f4ff;
+  --color-surface-muted: #e9f2ff;
+  --color-primary: #2f80ed;
+  --color-primary-dark: #1f5fb7;
+  --color-secondary: #3ab5a8;
+  --color-secondary-dark: #2d8c82;
+  --color-accent: #f4c95d;
+  --color-muted: #5a6473;
+  --color-text: #1f2a37;
+  --color-border: #d4deef;
+  --color-shadow: rgba(35, 74, 134, 0.16);
 }
 
 * {
@@ -25,7 +24,7 @@ body {
   font-family: 'Roboto', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: radial-gradient(circle at top, var(--color-surface-alt), var(--color-bg));
+  background: linear-gradient(180deg, var(--color-bg), #e7edf7);
   color: var(--color-text);
 }
 
