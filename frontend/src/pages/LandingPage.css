@@ -1,0 +1,119 @@
+.landing-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+  color: var(--color-text);
+}
+
+.landing-page.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.menu-header h1 {
+  font-size: 2.5rem;
+  margin: 12px 0;
+}
+
+.menu-header p {
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  color: var(--color-secondary-dark);
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.app-card {
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-border);
+  padding: 24px;
+  box-shadow: 0 20px 45px rgba(31, 59, 115, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.app-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app-card h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.app-card p {
+  margin: 0;
+  color: var(--color-muted);
+  flex: 1;
+}
+
+.app-card .tag {
+  font-size: 0.75rem;
+  background: rgba(31, 59, 115, 0.08);
+  color: var(--color-primary-dark);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.app-actions {
+  margin-top: auto;
+}
+
+.app-actions a,
+.app-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  box-shadow: 0 12px 24px rgba(31, 59, 115, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.app-actions a:hover,
+.app-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.app-card.disabled {
+  opacity: 0.5;
+}
+
+.app-card.disabled .app-actions button {
+  background: transparent;
+  color: var(--color-muted);
+  border: 1px dashed var(--color-border);
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .landing-page {
+    padding: 32px 16px 56px;
+  }
+
+  .menu-header h1 {
+    font-size: 2rem;
+  }
+}
+

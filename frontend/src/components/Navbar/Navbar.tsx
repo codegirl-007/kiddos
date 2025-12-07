@@ -10,7 +10,7 @@ export function Navbar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { channels } = useChannels();
   
-  const isHomePage = location.pathname === '/';
+  const isVideoPage = location.pathname.startsWith('/videos');
   const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
   
   // Sync search input with URL params
@@ -68,7 +68,7 @@ export function Navbar() {
         </Link>
         
         <div className="navbar-menu">
-          <Link to="/" className="navbar-link">
+          <Link to="/" className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}>
             Home
           </Link>
           
@@ -92,7 +92,7 @@ export function Navbar() {
         </div>
       </div>
       
-      {isHomePage && (
+      {isVideoPage && (
         <div className="navbar-filters">
           <div className="navbar-filters-container">
             <form onSubmit={handleSearchSubmit} className="navbar-search-form">

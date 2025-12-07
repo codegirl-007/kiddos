@@ -3,7 +3,8 @@ import { AuthProvider } from './hooks/useAuth';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navbar } from './components/Navbar/Navbar';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { HomePage } from './pages/HomePage';
+import { LandingPage } from './pages/LandingPage';
+import { VideoApp } from './pages/VideoApp';
 import { AdminPage } from './pages/AdminPage';
 import { LoginPage } from './pages/LoginPage';
 import './App.css';
@@ -17,7 +18,8 @@ function App() {
             <Navbar />
             <main className="main-content">
               <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/videos" element={<VideoApp />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route
                   path="/admin"

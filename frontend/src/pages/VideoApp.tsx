@@ -4,7 +4,7 @@ import { useVideos } from '../hooks/useVideos';
 import { VideoGrid } from '../components/VideoGrid/VideoGrid';
 import { VideoPlayer } from '../components/VideoPlayer/VideoPlayer';
 
-export function HomePage() {
+export function VideoApp() {
   const [searchParams] = useSearchParams();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   
@@ -53,4 +53,3 @@ export function HomePage() {
     </div>
   );
 }
-
