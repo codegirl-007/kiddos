@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useChannels } from '../../hooks/useChannels';
+import { APPS } from '../../config/apps';
 import './Navbar.css';
 
 export function Navbar() {
@@ -10,7 +11,13 @@ export function Navbar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { channels } = useChannels();
   
-  const isVideoPage = location.pathname.startsWith('/videos');
+  // Detect current app from registry
+  const getCurrentApp = (pathname: string) => {
+    return APPS.find(app => pathname === app.link || pathname.startsWith(app.link + '/'));
+  };
+  
+  const currentApp = getCurrentApp(location.pathname);
+  const isVideoApp = currentApp?.id === 'videos';
   const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
   
   // Sync search input with URL params
@@ -92,7 +99,7 @@ export function Navbar() {
         </div>
       </div>
       
-      {isVideoPage && (
+      {isVideoApp && (
         <div className="navbar-filters">
           <div className="navbar-filters-container">
             <form onSubmit={handleSearchSubmit} className="navbar-search-form">
