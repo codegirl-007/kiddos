@@ -82,9 +82,10 @@ export async function getDailyLimit(): Promise<number> {
   try {
     const { settingsApi } = await import('./apiClient');
     const response = await settingsApi.getTimeLimit();
-    cachedDailyLimit = response.data.dailyLimit;
+    const limit = response.data.dailyLimit;
+    cachedDailyLimit = limit;
     limitCacheTime = now;
-    return cachedDailyLimit;
+    return limit;
   } catch (error) {
     console.warn('Failed to fetch daily limit from server, using cached/default:', error);
     // Return cached value or default
