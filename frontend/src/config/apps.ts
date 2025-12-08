@@ -1,5 +1,6 @@
 import React from 'react';
 import { VideoApp } from '../pages/VideoApp';
+import { SpeechSoundsApp } from '../pages/SpeechSoundsApp';
 
 export type App = {
   id: string;
@@ -22,11 +23,12 @@ export const APPS: App[] = [
     component: VideoApp
   },
   {
-    id: 'storytime',
-    name: 'Story Time (Coming Soon)',
-    description: 'Narrated stories and audio adventures for quiet time.',
-    cta: 'In Development',
-    link: '/stories',
-    disabled: true
+    id: 'speechsounds',
+    name: 'Speech Sounds',
+    description: 'Practice speech sounds with word groups and track your progress.',
+    cta: 'Start Practicing',
+    link: '/speech-sounds',
+    disabled: false,
+    component: SpeechSoundsApp
   }
 ];

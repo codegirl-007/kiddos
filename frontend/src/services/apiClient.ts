@@ -127,5 +127,25 @@ export const settingsApi = {
     api.put('/settings/time-limit', { dailyLimit })
 };
 
+// Word Groups API
+export const wordGroupsApi = {
+  getAll: () => api.get('/word-groups'),
+  
+  create: (name: string) =>
+    api.post('/word-groups', { name }),
+  
+  update: (id: number, name: string) =>
+    api.put(`/word-groups/${id}`, { name }),
+  
+  delete: (id: number) =>
+    api.delete(`/word-groups/${id}`),
+  
+  addWord: (groupId: number, word: string) =>
+    api.post(`/word-groups/${groupId}/words`, { word }),
+  
+  deleteWord: (wordId: number) =>
+    api.delete(`/word-groups/words/${wordId}`)
+};
+
 
 

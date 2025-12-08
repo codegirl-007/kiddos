@@ -135,6 +135,35 @@ const migrations = [
         ON videos_cache(duration_seconds)
       `);
     }
+  },
+  {
+    id: 3,
+    name: 'add_speech_sounds_tables',
+    up: async () => {
+      // Create word_groups table
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS word_groups (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_word_groups_name ON word_groups(name)');
+      
+      // Create words table
+      await db.execute(`
+        CREATE TABLE IF NOT EXISTS words (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          word_group_id INTEGER NOT NULL,
+          word TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (word_group_id) REFERENCES word_groups(id) ON DELETE CASCADE
+        )
+      `);
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_words_group_id ON words(word_group_id)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_words_word ON words(word)');
+    }
   }
 ];
 

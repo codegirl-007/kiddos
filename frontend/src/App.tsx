@@ -5,6 +5,8 @@ import { Navbar } from './components/Navbar/Navbar';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
 import { AdminPage } from './pages/AdminPage';
+import { VideosAdminPage } from './pages/VideosAdminPage';
+import { SpeechSoundsAdminPage } from './pages/SpeechSoundsAdminPage';
 import { LoginPage } from './pages/LoginPage';
 import { APPS } from './config/apps';
 import './App.css';
@@ -34,6 +36,22 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <AdminPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/videos"
+                  element={
+                    <ProtectedRoute>
+                      <VideosAdminPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/speech-sounds"
+                  element={
+                    <ProtectedRoute>
+                      <SpeechSoundsAdminPage />
                     </ProtectedRoute>
                   }
                 />

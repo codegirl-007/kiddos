@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes.js';
 import channelRoutes from './routes/channels.routes.js';
 import videoRoutes from './routes/videos.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
+import wordGroupsRoutes from './routes/wordGroups.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 
@@ -46,6 +47,7 @@ async function startServer() {
     app.use('/api/channels', channelRoutes);
     app.use('/api/videos', videoRoutes);
     app.use('/api/settings', settingsRoutes);
+    app.use('/api/word-groups', wordGroupsRoutes);
     
     // Error handling
     app.use(errorHandler);
