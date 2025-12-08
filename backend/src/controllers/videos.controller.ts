@@ -6,15 +6,11 @@ import { refreshMultipleChannels, isRefreshInProgress, setRefreshInProgress } fr
 
 export async function getAllVideos(req: AuthRequest, res: Response) {
   try {
-    console.log('[CONTROLLER] req.query:', req.query);
-    // Zod validation already coerced these to numbers
     const { page = 1, limit = 12, channelId, search, sort = 'newest' } = req.query as any;
     
-    console.log('[CONTROLLER] page:', page, 'type:', typeof page);
     const pageNum = page as number;
     const limitNum = limit as number;
     const offset = (pageNum - 1) * limitNum;
-    console.log('[CONTROLLER] pageNum:', pageNum, 'limitNum:', limitNum, 'offset:', offset);
     
     // Build query
     let whereClause = 'v.duration_seconds >= 600';
@@ -179,9 +175,7 @@ async function refreshAllChannelsAsync() {
     const channelIds = channels.rows.map(row => row.id as string);
     
     if (channelIds.length > 0) {
-      console.log(`[AUTO-REFRESH] Starting refresh of ${channelIds.length} channels...`);
       const result = await refreshMultipleChannels(channelIds, true);
-      console.log(`[AUTO-REFRESH] Complete: ${result.success} succeeded, ${result.failed} failed`);
     }
   } catch (error) {
     console.error('[AUTO-REFRESH] Error:', error);

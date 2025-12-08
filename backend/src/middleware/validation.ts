@@ -21,12 +21,9 @@ export const videoQuerySchema = z.object({
 export function validateRequest(schema: z.ZodSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('[VALIDATION] Before validation:', req.query);
       const validated = schema.parse(req.method === 'GET' ? req.query : req.body);
-      console.log('[VALIDATION] After validation:', validated);
       if (req.method === 'GET') {
         req.query = validated as any;
-        console.log('[VALIDATION] Set req.query to:', req.query);
       } else {
         req.body = validated;
       }
