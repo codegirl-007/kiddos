@@ -33,13 +33,6 @@ export function useTimeLimit(): UseTimeLimitReturn {
   const startTimeRef = useRef<number | null>(null);
   const lastUpdateRef = useRef<number>(Date.now());
 
-  // Fetch limit from server on mount
-  useEffect(() => {
-    getDailyLimit().then(limit => {
-      setDailyLimit(limit);
-    });
-  }, []);
-
   // Update state from localStorage and cached server limit
   const updateState = useCallback(() => {
     setDailyLimit(getDailyLimitSync());
@@ -47,6 +40,15 @@ export function useTimeLimit(): UseTimeLimitReturn {
     setRemainingTime(getRemainingTimeToday());
     setLimitReached(isLimitReached());
   }, []);
+
+  // Fetch limit from server on mount
+  useEffect(() => {
+    getDailyLimit().then(limit => {
+      setDailyLimit(limit);
+      // Immediately recalculate limitReached with the correct server limit
+      updateState();
+    });
+  }, [updateState]);
 
   // Start tracking time
   const startTracking = useCallback(() => {

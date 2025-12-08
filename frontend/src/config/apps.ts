@@ -16,8 +16,8 @@ export type App = {
 export const APPS: App[] = [
   {
     id: 'videos',
-    name: 'Video Library',
-    description: 'Browse long-form videos from your trusted kid-friendly channels, already filtered to longer than ten minutes.',
+    name: 'Watch Videos',
+    description: 'Browse long-form videos from your trusted kid-friendly channels.',
     cta: 'Open Videos',
     link: '/videos',
     component: VideoApp

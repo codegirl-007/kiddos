@@ -5,11 +5,6 @@ import './LandingPage.css';
 export function LandingPage() {
   return (
     <div className="landing-page menu">
-      <header className="menu-header">
-        <h1>Welcome to Kiddos</h1>
-        <p>Select an app below to get started.</p>
-      </header>
-
       <section className="app-grid">
         {APPS.map(app => (
           <article key={app.id} className={`app-card ${app.disabled ? 'disabled' : ''}`}>
