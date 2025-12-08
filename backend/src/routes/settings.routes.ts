@@ -4,8 +4,10 @@ import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 
-// Protected routes - only admins can get/set time limits
-router.get('/time-limit', authMiddleware, getTimeLimit);
+// Public route - anyone can read the time limit
+router.get('/time-limit', getTimeLimit);
+
+// Protected route - only admins can set time limits
 router.put('/time-limit', authMiddleware, setTimeLimit);
 
 export default router;

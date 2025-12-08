@@ -11,20 +11,19 @@ import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 
-// All routes require authentication
-router.use(authMiddleware);
-
-// Word group routes (base routes first)
+// Public route - anyone can read word groups
 router.get('/', getAllWordGroups);
-router.post('/', createWordGroup);
+
+// Protected routes - only admins can create/update/delete
+router.post('/', authMiddleware, createWordGroup);
 
 // Word routes - must come before generic :id routes
 // More specific routes first
-router.post('/:groupId/words', addWord);
-router.delete('/words/:wordId', deleteWord);
+router.post('/:groupId/words', authMiddleware, addWord);
+router.delete('/words/:wordId', authMiddleware, deleteWord);
 
 // Word group routes with IDs (generic routes last)
-router.put('/:id', updateWordGroup);
-router.delete('/:id', deleteWordGroup);
+router.put('/:id', authMiddleware, updateWordGroup);
+router.delete('/:id', authMiddleware, deleteWordGroup);
 
 export default router;
