@@ -249,6 +249,7 @@
 .practice-area {
   .word-text {
     font-size: 48px;
+    text-transform: none;
   }
 }
 .word-text {
