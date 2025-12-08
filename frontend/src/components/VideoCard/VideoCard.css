@@ -1,3 +1,9 @@
+.video-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .video-card {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;

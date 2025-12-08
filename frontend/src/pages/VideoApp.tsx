@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useVideos } from '../hooks/useVideos';
+import { useTimeLimit } from '../hooks/useTimeLimit';
 import { VideoGrid } from '../components/VideoGrid/VideoGrid';
 import { VideoPlayer } from '../components/VideoPlayer/VideoPlayer';
+import './VideoApp.css';
 
 export function VideoApp() {
   const [searchParams] = useSearchParams();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const { limitReached } = useTimeLimit();
   
   // Read from URL query params
   const page = parseInt(searchParams.get('page') || '1', 10);
@@ -30,18 +33,31 @@ export function VideoApp() {
     // Trigger re-render
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
+
+  const handleVideoClick = (videoId: string) => {
+    if (limitReached) {
+      return; // Don't allow video to open if limit reached
+    }
+    setSelectedVideo(videoId);
+  };
   
   return (
     <div>
+      {limitReached && (
+        <div className="time-limit-banner">
+          <p>Daily time limit reached. Videos are disabled until tomorrow.</p>
+        </div>
+      )}
       
       <VideoGrid
         videos={videos}
         loading={loading}
         error={error}
-        onVideoClick={setSelectedVideo}
+        onVideoClick={handleVideoClick}
         page={page}
         totalPages={meta.totalPages}
         onPageChange={handlePageChange}
+        disabled={limitReached}
       />
       
       {selectedVideo && (

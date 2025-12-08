@@ -119,5 +119,13 @@ export const videosApi = {
     api.post('/videos/refresh', { channelIds })
 };
 
+// Settings API
+export const settingsApi = {
+  getTimeLimit: () => api.get('/settings/time-limit'),
+  
+  setTimeLimit: (dailyLimit: number) =>
+    api.put('/settings/time-limit', { dailyLimit })
+};
+
 
 

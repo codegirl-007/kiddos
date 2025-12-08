@@ -1,4 +1,5 @@
 import { ChannelManager } from '../components/ChannelManager/ChannelManager';
+import { TimeLimitManager } from '../components/TimeLimitManager/TimeLimitManager';
 import './AdminPage.css';
 
 export function AdminPage() {
@@ -6,10 +7,17 @@ export function AdminPage() {
     <div className="admin-page">
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
-        <p>Manage YouTube channels to display on the home page</p>
+        <p>Manage YouTube channels and video settings</p>
       </div>
       
-      <ChannelManager />
+      <div className="admin-content">
+        <div className="admin-column">
+          <ChannelManager />
+        </div>
+        <div className="admin-column">
+          <TimeLimitManager />
+        </div>
+      </div>
     </div>
   );
 }

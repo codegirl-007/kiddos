@@ -4,9 +4,10 @@ import './VideoCard.css';
 interface VideoCardProps {
   video: Video;
   onClick: () => void;
+  disabled?: boolean;
 }
 
-export function VideoCard({ video, onClick }: VideoCardProps) {
+export function VideoCard({ video, onClick, disabled = false }: VideoCardProps) {
   const formatViews = (count: number): string => {
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;
@@ -31,7 +32,7 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
   };
   
   return (
-    <div className="video-card" onClick={onClick}>
+    <div className={`video-card ${disabled ? 'disabled' : ''}`} onClick={disabled ? undefined : onClick}>
       <div className="video-thumbnail-container">
         <img 
           src={video.thumbnailUrl} 

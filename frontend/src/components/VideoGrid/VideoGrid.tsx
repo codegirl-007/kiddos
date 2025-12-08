@@ -10,6 +10,7 @@ interface VideoGridProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  disabled?: boolean;
 }
 
 export function VideoGrid({ 
@@ -19,7 +20,8 @@ export function VideoGrid({
   onVideoClick,
   page,
   totalPages,
-  onPageChange
+  onPageChange,
+  disabled = false
 }: VideoGridProps) {
   if (loading) {
     return (
@@ -59,12 +61,13 @@ export function VideoGrid({
   
   return (
     <div>
-      <div className="video-grid">
+      <div className={`video-grid ${disabled ? 'disabled' : ''}`}>
         {videos.map(video => (
           <VideoCard
             key={video.id}
             video={video}
-            onClick={() => onVideoClick(video.id)}
+            onClick={() => !disabled && onVideoClick(video.id)}
+            disabled={disabled}
           />
         ))}
       </div>
