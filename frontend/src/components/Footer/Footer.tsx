@@ -4,7 +4,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="font-bold text-foreground mb-4">Rainbow, Cupcakes and Unicorns</h3>
+            <h3 className="font-bold text-foreground mb-4">Rainbows, Cupcakes and Unicorns</h3>
             <p className="text-sm text-muted-foreground">
               Making education and fun accessible for every child, completely free.
             </p>
@@ -52,7 +52,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 PlayLearn. Free learning for all children. No ads, no logins, no worries! 🎓</p>
+          <p>© 2025 Rainbows, Cupcakes and Unicorns. Free learning for all children. No ads, no logins, no worries! 🎓</p>
         </div>
       </div>
     </footer>

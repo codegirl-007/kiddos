@@ -76,7 +76,7 @@ export function VideoGrid({
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page === 1}
-            className="px-4 py-2 bg-secondary text-secondary-foreground border-none rounded-full cursor-pointer text-sm font-medium transition-all text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-sm font-semibold px-3 py-2 rounded-full transition-all active:scale-95 bg-white text-foreground border-2 border-primary hover:bg-pink-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
           >
             Previous
           </button>
@@ -98,10 +98,10 @@ export function VideoGrid({
                 <button
                   key={pageNum}
                   onClick={() => onPageChange(pageNum)}
-                  className={`w-9 h-9 bg-card border border-transparent rounded-full cursor-pointer text-sm font-medium transition-all text-foreground hover:bg-primary/10 hover:border-primary/50 ${
+                  className={`text-sm font-semibold px-3 py-2 rounded-full transition-all active:scale-95 ${
                     page === pageNum 
-                      ? 'bg-gradient-to-r from-primary to-secondary text-white border-transparent' 
-                      : ''
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'bg-white text-foreground border-2 border-primary hover:bg-pink-50'
                   }`}
                 >
                   {pageNum}
@@ -113,7 +113,7 @@ export function VideoGrid({
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page === totalPages}
-            className="px-4 py-2 bg-secondary text-secondary-foreground border-none rounded-full cursor-pointer text-sm font-medium transition-all text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-sm font-semibold px-3 py-2 rounded-full transition-all active:scale-95 bg-white text-foreground border-2 border-primary hover:bg-pink-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
           >
             Next
           </button>

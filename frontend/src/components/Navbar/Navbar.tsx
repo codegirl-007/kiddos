@@ -72,9 +72,17 @@ export function Navbar() {
         <div className="max-w-5xl mx-auto px-4 py-5">
           <div className="flex items-center gap-3 justify-between">
             <Link to="/" className="flex items-center gap-3">
-              <span className="text-4xl">🌈</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">Rainbow, Cupcakes & Unicorns</h1>
-              <span className="text-4xl">🧁</span>
+              <img 
+                src="/rainbow.png" 
+                alt="Rainbow" 
+                className="h-10 w-10 md:h-12 md:w-12 object-contain"
+              />
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground">Rainbows, Cupcakes & Unicorns</h1>
+              <img 
+                src="/cupcake.png" 
+                alt="Cupcake" 
+                className="h-10 w-10 md:h-12 md:w-12 object-contain"
+              />
             </Link>
             
             <div className="flex items-center gap-3">

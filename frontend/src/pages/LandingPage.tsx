@@ -44,7 +44,23 @@ export function LandingPage() {
                     }
                   }}
                 >
-                  <div className="mb-3 text-5xl">{emoji}</div>
+                  <div className="mb-3">
+                    {app.id === 'videos' ? (
+                      <img 
+                        src="/video-marketing.png" 
+                        alt="Video App" 
+                        className="w-20 h-20 object-contain"
+                      />
+                    ) : app.id === 'speechsounds' ? (
+                      <img 
+                        src="/unicorn-talking.png" 
+                        alt="Speech Sounds" 
+                        className="w-20 h-20 object-contain"
+                      />
+                    ) : (
+                      <span className="text-5xl">{emoji}</span>
+                    )}
+                  </div>
                   <h3 className="text-xl font-bold mb-1">{app.name}</h3>
                   <p className="text-sm opacity-75">{app.description}</p>
                 </Link>
