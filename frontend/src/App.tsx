@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navbar } from './components/Navbar/Navbar';
+import { Footer } from './components/Footer/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
 import { AdminPage } from './pages/AdminPage';
@@ -9,6 +10,7 @@ import { VideosAdminPage } from './pages/VideosAdminPage';
 import { SpeechSoundsAdminPage } from './pages/SpeechSoundsAdminPage';
 import { LoginPage } from './pages/LoginPage';
 import { APPS } from './config/apps';
+import './globals.css';
 import './App.css';
 
 function App() {
@@ -57,6 +59,7 @@ function App() {
                 />
               </Routes>
             </main>
+            <Footer />
           </div>
         </AuthProvider>
       </BrowserRouter>

@@ -1,6 +1,6 @@
 .speech-sounds-app {
   min-height: calc(100vh - 60px);
-  background: var(--color-bg);
+  background: var(--background);
   padding: 24px;
   max-width: 900px;
   margin: 0 auto;
@@ -15,17 +15,17 @@
   margin: 0 0 12px 0;
   font-size: 42px;
   font-weight: 800;
-  background: var(--gradient-primary-text);
+  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-family: var(--font-playful);
 }
 
 .app-header p {
   margin: 0;
   font-size: 18px;
-  color: var(--color-text);
+  color: var(--foreground);
   font-weight: 600;
   opacity: 0.8;
 }
@@ -33,23 +33,22 @@
 .back-to-groups-button {
   margin-bottom: 16px;
   padding: 12px 24px;
-  background: var(--color-surface);
-  border: 3px solid var(--color-primary);
+  background: var(--card);
+  border: 3px solid var(--primary);
   border-radius: 20px;
-  color: var(--color-primary);
+  color: var(--primary);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 4px 8px var(--color-shadow);
-  font-family: var(--font-playful);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .back-to-groups-button:hover {
-  background: var(--color-primary);
-  color: white;
+  background: var(--primary);
+  color: var(--primary-foreground);
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 6px 12px rgba(255, 107, 157, 0.3);
 }
 
 .groups-grid {
@@ -60,16 +59,16 @@
 }
 
 .group-card {
-  background: var(--color-surface);
-  border: 4px solid var(--color-primary);
+  background: var(--card);
+  border: 4px solid var(--primary);
   border-radius: 24px;
   padding: 32px 24px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-decoration: none;
-  color: var(--color-text);
-  box-shadow: 0 8px 16px var(--color-shadow);
+  color: var(--foreground);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 }
@@ -83,7 +82,7 @@
   height: 200%;
   background: radial-gradient(
     circle,
-    rgba(124, 58, 237, 0.1) 0%,
+    rgba(255, 107, 157, 0.1) 0%,
     transparent 70%
   );
   opacity: 0;
@@ -92,8 +91,8 @@
 
 .group-card:hover {
   transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.3);
-  border-color: var(--color-secondary);
+  box-shadow: 0 12px 32px rgba(255, 107, 157, 0.3);
+  border-color: var(--secondary);
 }
 
 .group-card:hover::before {
@@ -104,11 +103,11 @@
   margin: 0 0 8px 0;
   font-size: 28px;
   font-weight: 800;
-  background: var(--gradient-primary-text);
+  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-family: var(--font-playful);
   position: relative;
   z-index: 1;
 }
@@ -116,18 +115,18 @@
 .group-card-count {
   margin: 0;
   font-size: 18px;
-  color: var(--color-muted);
+  color: var(--muted-foreground);
   font-weight: 700;
   position: relative;
   z-index: 1;
 }
 
 .practice-area {
-  background: var(--color-surface);
+  background: var(--card);
   border-radius: 32px;
   padding: 40px;
-  box-shadow: 0 8px 32px var(--color-shadow);
-  border: 4px solid var(--color-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 4px solid var(--primary);
 }
 
 .word-display {
@@ -138,13 +137,13 @@
 .word-text {
   font-size: 72px;
   font-weight: 900;
-  background: var(--gradient-primary-text);
+  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0 0 20px 0;
   letter-spacing: 4px;
-  font-family: var(--font-playful);
   animation: wordBounce 0.5s ease-out;
 }
 
@@ -171,27 +170,26 @@
   font-weight: 700;
   padding: 12px 20px;
   border-radius: 25px;
-  box-shadow: 0 4px 8px var(--color-shadow);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 3px solid;
-  font-family: var(--font-playful);
 }
 
 .stat-pass {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
+  background: #10b981;
+  border-color: #10b981;
   color: white;
 }
 
 .stat-fail {
-  background: var(--color-accent-alt);
-  border-color: var(--color-accent-alt);
+  background: #ef4444;
+  border-color: #ef4444;
   color: white;
 }
 
 .stat-total {
-  background: var(--color-secondary);
-  border-color: var(--color-secondary);
-  color: white;
+  background: var(--secondary);
+  border-color: var(--secondary);
+  color: var(--secondary-foreground);
 }
 
 .practice-container {
@@ -202,9 +200,8 @@
   text-align: center;
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--foreground);
   margin-bottom: 24px;
-  font-family: var(--font-playful);
 }
 
 .practice-grid {
@@ -220,30 +217,30 @@
   align-items: center;
   gap: 12px;
   padding: 20px 16px;
-  border: 3px solid var(--color-border);
+  border: 3px solid var(--border);
   border-radius: 20px;
-  background: var(--color-surface);
+  background: var(--card);
   transition: all 0.3s;
 }
 
 .practice-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px var(--color-shadow);
-  border-color: var(--color-primary);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
 }
 
 .practice-number {
   font-size: 16px;
   font-weight: 700;
-  color: white;
+  color: var(--primary-foreground);
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--color-primary);
-  box-shadow: 0 4px 8px var(--color-shadow);
+  background: var(--primary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .practice-buttons {
@@ -277,16 +274,16 @@
 }
 
 .pass-button:hover {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
+  background: #10b981;
+  border-color: #10b981;
   color: white;
   box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
 }
 
 .pass-button.active {
-  background: var(--color-accent);
+  background: #10b981;
   color: white;
-  border-color: var(--color-accent);
+  border-color: #10b981;
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
 }
@@ -297,16 +294,16 @@
 }
 
 .fail-button:hover {
-  background: var(--color-accent-alt);
-  border-color: var(--color-accent-alt);
+  background: #ef4444;
+  border-color: #ef4444;
   color: white;
   box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
 }
 
 .fail-button.active {
-  background: var(--color-accent-alt);
+  background: #ef4444;
   color: white;
-  border-color: var(--color-accent-alt);
+  border-color: #ef4444;
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
@@ -322,22 +319,21 @@
 
 .nav-button {
   padding: 16px 32px;
-  background: var(--color-primary);
-  color: white;
-  border: 3px solid var(--color-primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: 3px solid var(--primary);
   border-radius: 25px;
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 4px 12px var(--color-shadow);
-  font-family: var(--font-playful);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .nav-button:hover:not(:disabled) {
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
-  border-color: var(--color-secondary);
+  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+  border-color: var(--secondary);
 }
 
 .nav-button:disabled {
@@ -348,14 +344,13 @@
 
 .word-counter {
   font-size: 20px;
-  color: white;
+  color: var(--secondary-foreground);
   font-weight: 700;
-  font-family: var(--font-playful);
   padding: 12px 24px;
-  background: var(--color-secondary);
+  background: var(--secondary);
   border-radius: 20px;
-  border: 3px solid var(--color-secondary);
-  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+  border: 3px solid var(--secondary);
+  box-shadow: 0 4px 8px rgba(255, 165, 0, 0.3);
 }
 
 .word-actions {
@@ -364,20 +359,19 @@
 
 .reset-button {
   padding: 12px 24px;
-  background: var(--color-surface);
-  color: var(--color-accent-alt);
-  border: 3px solid var(--color-accent-alt);
+  background: var(--card);
+  color: #ef4444;
+  border: 3px solid #ef4444;
   border-radius: 20px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
-  font-family: var(--font-playful);
 }
 
 .reset-button:hover {
-  background: var(--color-accent-alt);
+  background: #ef4444;
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
@@ -388,20 +382,19 @@
 .empty-state {
   text-align: center;
   padding: 48px 24px;
-  background: var(--color-surface);
+  background: var(--card);
   border-radius: 24px;
   margin-top: 32px;
-  border: 4px solid var(--color-primary);
-  box-shadow: 0 8px 16px var(--color-shadow);
+  border: 4px solid var(--primary);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .empty-state h2 {
   margin: 0 0 12px 0;
   font-size: 32px;
-  color: var(--color-text);
-  font-family: var(--font-playful);
+  color: var(--primary);
   font-weight: 800;
-  background: var(--gradient-primary-text);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -409,7 +402,7 @@
 
 .empty-state p {
   margin: 0;
-  color: var(--color-muted);
+  color: var(--muted-foreground);
   font-size: 18px;
   font-weight: 600;
 }

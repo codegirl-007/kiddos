@@ -3,7 +3,6 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useChannels } from '../../hooks/useChannels';
 import { APPS } from '../../config/apps';
-import './Navbar.css';
 
 export function Navbar() {
   const { isAuthenticated, logout } = useAuth();
@@ -68,89 +67,114 @@ export function Navbar() {
                      (searchParams.get('sort') && searchParams.get('sort') !== 'newest');
   
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          <span className="logo-text">Rainbows, Cupcakes and Unicorns</span>
-        </Link>
-        
-        <div className="navbar-menu">
-          <Link to="/" className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}>
-            Home
-          </Link>
-          
-          {isAuthenticated && (
-            <Link to="/admin" className="navbar-link">
-              Admin
+    <>
+      <header className="bg-white border-b-4 border-primary sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 py-5">
+          <div className="flex items-center gap-3 justify-between">
+            <Link to="/" className="flex items-center gap-3">
+              <span className="text-4xl">🌈</span>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground">Rainbow, Cupcakes & Unicorns</h1>
+              <span className="text-4xl">🧁</span>
             </Link>
-          )}
-          
-          {isAuthenticated ? (
-            <div className="navbar-user">
-              <button onClick={handleLogout} className="navbar-button">
-                Logout
-              </button>
-            </div>
-          ) : (
-            <Link to="/login" className="navbar-button">
-              Login
-            </Link>
-          )}
-        </div>
-      </div>
-      
-      {isVideoApp && (
-        <div className="navbar-filters">
-          <div className="navbar-filters-container">
-            <form onSubmit={handleSearchSubmit} className="navbar-search-form">
-              <input
-                type="text"
-                placeholder="Search videos..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="navbar-search-input"
-              />
-              <button type="submit" className="navbar-search-button">
-                🔍
-              </button>
-            </form>
             
-            <div className="navbar-filter-controls">
-              <select
-                value={searchParams.get('sort') || 'newest'}
-                onChange={handleSortChange}
-                className="navbar-filter-select"
+            <div className="flex items-center gap-3">
+              <Link 
+                to="/" 
+                className={`text-sm font-semibold px-3 py-2 rounded-full transition-all active:scale-95 ${
+                  location.pathname === '/' 
+                    ? 'bg-primary text-primary-foreground shadow-md' 
+                    : 'bg-white text-foreground border-2 border-primary hover:bg-pink-50'
+                }`}
               >
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-                <option value="popular">Most Popular</option>
-              </select>
+                Home
+              </Link>
               
-              <select
-                value={searchParams.get('channel') || ''}
-                onChange={handleChannelChange}
-                className="navbar-filter-select"
-              >
-                <option value="">All Channels</option>
-                {channels.map(channel => (
-                  <option key={channel.id} value={channel.id}>
-                    {channel.name}
-                  </option>
-                ))}
-              </select>
-              
-              {hasFilters && (
-                <button
-                  onClick={handleClearFilters}
-                  className="navbar-clear-button"
+              {isAuthenticated && (
+                <Link 
+                  to="/admin" 
+                  className="text-sm font-semibold px-3 py-2 rounded-full bg-white text-foreground border-2 border-primary hover:bg-pink-50 transition-all active:scale-95"
                 >
-                  Clear Filters
+                  Admin
+                </Link>
+              )}
+              
+              {isAuthenticated ? (
+                <button 
+                  onClick={handleLogout} 
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-full font-semibold text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-md"
+                >
+                  Logout
                 </button>
+              ) : (
+                <Link 
+                  to="/login" 
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-full font-semibold text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-md"
+                >
+                  Login
+                </Link>
               )}
             </div>
           </div>
         </div>
+      </header>
+      
+      {isVideoApp && (
+        <div className="bg-muted border-b border-border">
+          <div className="max-w-5xl mx-auto px-4 py-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+              <form onSubmit={handleSearchSubmit} className="flex gap-2 flex-1 max-w-md">
+                <input
+                  type="text"
+                  placeholder="Search videos..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="flex-1 px-4 py-2 border border-border rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors text-sm font-semibold"
+                >
+                  🔍
+                </button>
+              </form>
+              
+              <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+                <select
+                  value={searchParams.get('sort') || 'newest'}
+                  onChange={handleSortChange}
+                  className="px-4 py-2 border border-border rounded-full bg-white text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                  <option value="popular">Most Popular</option>
+                </select>
+                
+                <select
+                  value={searchParams.get('channel') || ''}
+                  onChange={handleChannelChange}
+                  className="px-4 py-2 border border-border rounded-full bg-white text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="">All Channels</option>
+                  {channels.map(channel => (
+                    <option key={channel.id} value={channel.id}>
+                      {channel.name}
+                    </option>
+                  ))}
+                </select>
+                
+                {hasFilters && (
+                  <button
+                    onClick={handleClearFilters}
+                    className="px-4 py-2 border border-border rounded-full bg-white text-sm hover:bg-muted transition-colors whitespace-nowrap"
+                  >
+                    Clear Filters
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-    </nav>
+    </>
   );
 }

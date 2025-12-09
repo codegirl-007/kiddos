@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import './LoginPage.css';
 
 export function LoginPage() {
   const [username, setUsername] = useState('');
@@ -28,18 +27,24 @@ export function LoginPage() {
   };
   
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-header">
-          <h1>Admin Login</h1>
-          <p>Sign in to manage channels</p>
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+      <div className="w-full max-w-md bg-card rounded-3xl shadow-lg overflow-hidden border border-border">
+        <div className="px-8 pt-8 pb-6 text-center border-b border-border">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Admin Login</h1>
+          <p className="text-sm text-muted-foreground">Sign in to manage channels</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="login-form">
-          {error && <div className="login-error">{error}</div>}
+        <form onSubmit={handleSubmit} className="px-8 py-8">
+          {error && (
+            <div className="mb-6 p-3 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
           
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
+          <div className="mb-5">
+            <label htmlFor="username" className="block mb-2 text-sm font-semibold text-foreground">
+              Username
+            </label>
             <input
               id="username"
               type="text"
@@ -48,11 +53,14 @@ export function LoginPage() {
               disabled={loading}
               required
               autoFocus
+              className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50"
             />
           </div>
           
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
+          <div className="mb-6">
+            <label htmlFor="password" className="block mb-2 text-sm font-semibold text-foreground">
+              Password
+            </label>
             <input
               id="password"
               type="password"
@@ -60,10 +68,15 @@ export function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               required
+              className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50"
             />
           </div>
           
-          <button type="submit" disabled={loading} className="login-button">
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl font-semibold text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+          >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
