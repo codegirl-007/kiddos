@@ -5,7 +5,7 @@ import { getGame, addPlayer, removePlayer, makeMove, resetGame, joinQueue, broad
 let wss: WebSocketServer | null = null;
 
 export function createWebSocketServer(server: any) {
-  wss = new WebSocketServer({ server, path: '/ws' });
+  wss = new WebSocketServer({ server, path: '/api/ws' });
 
   wss.on('connection', (ws: WS, req) => {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
@@ -242,7 +242,7 @@ export function createWebSocketServer(server: any) {
     });
   });
 
-  console.log('✅ WebSocket server started on /ws');
+  console.log('✅ WebSocket server started on /api/ws');
 }
 
 export function getWebSocketServer(): WebSocketServer | null {

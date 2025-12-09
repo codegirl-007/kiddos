@@ -20,10 +20,9 @@ export function TicTacToeApp() {
   useEffect(() => {
     // Get WebSocket URL - connect to backend server
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-    const backendUrl = apiUrl.replace('/api', '');
-    const wsProtocol = backendUrl.startsWith('https') ? 'wss:' : 'ws:';
-    const wsHost = backendUrl.replace(/^https?:\/\//, '');
-    const wsUrl = `${wsProtocol}//${wsHost}/ws?room=default&playerId=${playerIdRef.current}`;
+    const wsProtocol = apiUrl.startsWith('https') ? 'wss:' : 'ws:';
+    const wsHost = apiUrl.replace(/^https?:\/\//, '').replace('/api', '');
+    const wsUrl = `${wsProtocol}//${wsHost}/api/ws?room=default&playerId=${playerIdRef.current}`;
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
