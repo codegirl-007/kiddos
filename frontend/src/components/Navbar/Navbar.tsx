@@ -77,7 +77,7 @@ export function Navbar() {
                 alt="Rainbow" 
                 className="h-10 w-10 md:h-12 md:w-12 object-contain"
               />
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">Rainbows, Cupcakes & Unicorns</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground" style={{ fontFamily: "'Butterfly Kids', cursive" }}>Rainbows, Cupcakes & Unicorns</h1>
               <img 
                 src="/cupcake.png" 
                 alt="Cupcake" 
