@@ -22,7 +22,7 @@ export function TicTacToeApp() {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
     const wsProtocol = apiUrl.startsWith('https') ? 'wss:' : 'ws:';
     const wsHost = apiUrl.replace(/^https?:\/\//, '').replace('/api', '');
-    const wsUrl = `${wsProtocol}//${wsHost}/api/ws?room=default&playerId=${playerIdRef.current}`;
+    const wsUrl = `${wsProtocol}//${wsHost}/api/ws?gameType=tic-tac-toe&room=default&playerId=${playerIdRef.current}`;
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
