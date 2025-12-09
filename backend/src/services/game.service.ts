@@ -53,7 +53,7 @@ function checkDraw(board: (string | null)[]): boolean {
   return board.every(cell => cell !== null) && !checkWinner(board);
 }
 
-function makeMove(roomId: string, playerId: string, position: number): { success: boolean; error?: string; autoStartNext?: boolean } {
+function makeMove(roomId: string, playerId: string, position: number): { success: boolean; error?: string; autoStartNext?: boolean; autoRematch?: boolean } {
   const game = games.get(roomId);
   if (!game) {
     return { success: false, error: 'Game not found' };
@@ -88,11 +88,13 @@ function makeMove(roomId: string, playerId: string, position: number): { success
     // After broadcast, if there's a queue, we'll auto-start the next game
   } else if (isDraw) {
     game.isDraw = true;
+    // Auto-rematch on draw - same two players play again
+    // Note: The websocket handler will reset the board and keep same players
   } else {
     game.currentPlayer = game.currentPlayer === 'X' ? 'O' : 'X';
   }
 
-  return { success: true, autoStartNext: winner !== null && game.queue.length > 0 };
+  return { success: true, autoStartNext: winner !== null && game.queue.length > 0, autoRematch: isDraw };
 }
 
 function addPlayer(roomId: string, playerId: string, ws: WS): { success: boolean; error?: string; symbol?: 'X' | 'O' | null } {
@@ -196,25 +198,10 @@ function resetGame(roomId: string, resettingPlayerId?: string): void {
         nextPlayer.symbol = previousWinner === 'X' ? 'O' : 'X';
       }
     }
-  } else if (wasDraw && hasQueue && activePlayers.length === 2) {
-    // If it was a draw and there's a queue, both players go to queue
-    activePlayers.forEach(p => {
-      p.symbol = null;
-      game.queue.push(p.id);
-    });
-
-    // Promote next 2 from queue
-    const newPlayer1 = game.queue.shift();
-    const newPlayer2 = game.queue.shift();
-    
-    if (newPlayer1) {
-      const p1 = game.players.find(p => p.id === newPlayer1);
-      if (p1) p1.symbol = 'X';
-    }
-    if (newPlayer2) {
-      const p2 = game.players.find(p => p.id === newPlayer2);
-      if (p2) p2.symbol = 'O';
-    }
+  } else if (wasDraw && activePlayers.length === 2) {
+    // If it was a draw, rematch - same two players play again
+    // Players keep their symbols, board is already reset above
+    // No changes needed - just reset the board (already done above)
   } else if (activePlayers.length > 2) {
     // If no winner or no queue, rotate all players
     activePlayers.forEach(p => {

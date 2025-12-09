@@ -101,8 +101,40 @@ export function createWebSocketServer(server: any) {
                 }
               });
 
+              // Auto-rematch on draw - same two players play again
+              if (moveResult.autoRematch && updatedGame.isDraw) {
+                // Reset board, keep same players and symbols
+                updatedGame.board = Array(9).fill(null);
+                updatedGame.currentPlayer = 'X';
+                updatedGame.winner = null;
+                updatedGame.isDraw = false;
+                // Players keep their symbols, so no change needed
+                
+                // Broadcast new game state immediately
+                setTimeout(() => {
+                  const rematchGame = getGame(roomId);
+                  if (rematchGame) {
+                    rematchGame.players.forEach(player => {
+                      if (player.ws.readyState === 1) {
+                        player.ws.send(JSON.stringify({
+                          type: 'gameState',
+                          game: {
+                            board: rematchGame.board,
+                            currentPlayer: rematchGame.currentPlayer,
+                            winner: rematchGame.winner,
+                            isDraw: rematchGame.isDraw,
+                            yourSymbol: player.symbol,
+                            players: rematchGame.players.map(p => ({ id: p.id, symbol: p.symbol })),
+                            queue: rematchGame.queue,
+                          },
+                        }));
+                      }
+                    });
+                  }
+                }, 1500); // Small delay to show draw message before rematch
+              }
               // Auto-start next game if there's a winner and queue
-              if (moveResult.autoStartNext && updatedGame.winner && updatedGame.queue.length > 0) {
+              else if (moveResult.autoStartNext && updatedGame.winner && updatedGame.queue.length > 0) {
                 const winner = updatedGame.winner;
                 const loser = updatedGame.players.find(p => p.symbol !== winner && p.symbol !== null);
                 

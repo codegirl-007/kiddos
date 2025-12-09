@@ -255,33 +255,13 @@ export function TicTacToeApp() {
                       }
                     }
                     
-                    // Draw: if there's a queue, show "Get in line", otherwise "Play Again"
+                    // Draw: rematch happens automatically, show message
                     if (gameState.isDraw) {
-                      if (hasQueue && !isInQueue) {
-                        return (
-                          <button
-                            onClick={handleJoinQueue}
-                            className="px-6 py-3 bg-secondary text-primary-foreground rounded-full font-semibold hover:bg-secondary/90 transition-all active:scale-95 shadow-md"
-                          >
-                            Get in line to play again
-                          </button>
-                        );
-                      } else if (!hasQueue) {
-                        return (
-                          <button
-                            onClick={handleReset}
-                            className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary/90 transition-all active:scale-95 shadow-md"
-                          >
-                            Play Again
-                          </button>
-                        );
-                      } else {
-                        return (
-                          <p className="text-sm text-muted-foreground">
-                            You're in line to play again (position {gameState.queue.indexOf(playerIdRef.current) + 1})
-                          </p>
-                        );
-                      }
+                      return (
+                        <p className="text-sm text-primary font-semibold">
+                          It's a draw! Rematch starting...
+                        </p>
+                      );
                     }
                     
                     return null;
