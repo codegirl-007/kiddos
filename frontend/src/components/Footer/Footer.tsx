@@ -52,7 +52,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <p>© 2025 Rainbows, Cupcakes and Unicorns. Free learning for all children. No ads, no logins, no worries! 🎓</p>
+          <p>© 2025 Rainbows, Cupcakes and Unicorns. Free fun for all children. No ads, no logins, no worries! 🎓</p>
         </div>
       </div>
     </footer>
