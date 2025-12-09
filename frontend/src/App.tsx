@@ -11,16 +11,15 @@ import { SpeechSoundsAdminPage } from './pages/SpeechSoundsAdminPage';
 import { LoginPage } from './pages/LoginPage';
 import { APPS } from './config/apps';
 import './globals.css';
-import './App.css';
 
 function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
         <AuthProvider>
-          <div className="app">
+          <div className="min-h-screen flex flex-col">
             <Navbar />
-            <main className="main-content">
+            <main className="flex-1">
               <Routes>
                 <Route path="/" element={<LandingPage />} />
                 {/* Dynamically generate routes for enabled apps */}

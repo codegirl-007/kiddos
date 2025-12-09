@@ -4,7 +4,6 @@ import { useVideos } from '../hooks/useVideos';
 import { useTimeLimit } from '../hooks/useTimeLimit';
 import { VideoGrid } from '../components/VideoGrid/VideoGrid';
 import { VideoPlayer } from '../components/VideoPlayer/VideoPlayer';
-import './VideoApp.css';
 
 export function VideoApp() {
   const [searchParams] = useSearchParams();
@@ -44,8 +43,8 @@ export function VideoApp() {
   return (
     <div>
       {limitReached && (
-        <div className="time-limit-banner">
-          <p>Daily time limit reached. Videos are disabled until tomorrow.</p>
+        <div className="bg-[#ff6b6b] text-white py-3 px-5 text-center font-medium mb-5 rounded-md">
+          <p className="m-0">Daily time limit reached. Videos are disabled until tomorrow.</p>
         </div>
       )}
       

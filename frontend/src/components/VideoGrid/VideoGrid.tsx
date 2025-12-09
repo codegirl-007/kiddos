@@ -1,6 +1,5 @@
 import { Video } from '../../types/api';
 import { VideoCard } from '../VideoCard/VideoCard';
-import './VideoGrid.css';
 
 interface VideoGridProps {
   videos: Video[];
@@ -25,15 +24,15 @@ export function VideoGrid({
 }: VideoGridProps) {
   if (loading) {
     return (
-      <div className="video-grid">
+      <div className={`grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 py-8 px-6 max-w-[1600px] mx-auto ${disabled ? 'pointer-events-none' : ''}`}>
         {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="skeleton-card">
-            <div className="skeleton-thumbnail"></div>
-            <div className="skeleton-info">
-              <div className="skeleton-avatar"></div>
-              <div className="skeleton-text">
-                <div className="skeleton-title"></div>
-                <div className="skeleton-meta"></div>
+          <div key={i} className="animate-pulse">
+            <div className="w-full aspect-video bg-muted rounded-2xl"></div>
+            <div className="flex gap-3 mt-3">
+              <div className="w-9 h-9 rounded-full bg-muted"></div>
+              <div className="flex-1">
+                <div className="h-4 bg-muted rounded mb-2"></div>
+                <div className="h-3 bg-muted rounded w-3/5"></div>
               </div>
             </div>
           </div>
@@ -44,7 +43,7 @@ export function VideoGrid({
   
   if (error) {
     return (
-      <div className="error-message">
+      <div className="text-center py-12 px-6 text-primary">
         <p>Error: {error}</p>
       </div>
     );
@@ -52,16 +51,16 @@ export function VideoGrid({
   
   if (videos.length === 0) {
     return (
-      <div className="empty-state">
-        <h2>No videos found</h2>
-        <p>Try adding some channels from the admin panel</p>
+      <div className="text-center py-12 px-6 text-muted-foreground">
+        <h2 className="m-0 mb-2 text-xl font-medium">No videos found</h2>
+        <p className="m-0 text-sm">Try adding some channels from the admin panel</p>
       </div>
     );
   }
   
   return (
     <div>
-      <div className={`video-grid ${disabled ? 'disabled' : ''}`}>
+      <div className={`grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 py-8 px-6 max-w-[1600px] mx-auto md:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] md:gap-6 md:py-8 md:px-6 grid-cols-1 gap-4 p-4 ${disabled ? 'pointer-events-none' : ''}`}>
         {videos.map(video => (
           <VideoCard
             key={video.id}
@@ -73,16 +72,16 @@ export function VideoGrid({
       </div>
       
       {totalPages > 1 && (
-        <div className="pagination">
+        <div className="flex justify-center items-center gap-3 py-8 px-6 mx-auto max-w-[1600px] md:flex-row md:gap-3 md:py-8 md:px-6 flex-col gap-2 p-4">
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page === 1}
-            className="pagination-button"
+            className="px-4 py-2 bg-secondary text-secondary-foreground border-none rounded-full cursor-pointer text-sm font-medium transition-all text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Previous
           </button>
           
-          <div className="pagination-numbers">
+          <div className="flex gap-1 md:flex flex hidden">
             {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
               let pageNum;
               if (totalPages <= 5) {
@@ -99,7 +98,11 @@ export function VideoGrid({
                 <button
                   key={pageNum}
                   onClick={() => onPageChange(pageNum)}
-                  className={`pagination-number ${page === pageNum ? 'active' : ''}`}
+                  className={`w-9 h-9 bg-card border border-transparent rounded-full cursor-pointer text-sm font-medium transition-all text-foreground hover:bg-primary/10 hover:border-primary/50 ${
+                    page === pageNum 
+                      ? 'bg-gradient-to-r from-primary to-secondary text-white border-transparent' 
+                      : ''
+                  }`}
                 >
                   {pageNum}
                 </button>
@@ -110,7 +113,7 @@ export function VideoGrid({
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page === totalPages}
-            className="pagination-button"
+            className="px-4 py-2 bg-secondary text-secondary-foreground border-none rounded-full cursor-pointer text-sm font-medium transition-all text-white shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
           </button>
@@ -119,6 +122,3 @@ export function VideoGrid({
     </div>
   );
 }
-
-
-

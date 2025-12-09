@@ -89,15 +89,6 @@ export function Navbar() {
                 Home
               </Link>
               
-              {isAuthenticated && (
-                <Link 
-                  to="/admin" 
-                  className="text-sm font-semibold px-3 py-2 rounded-full bg-white text-foreground border-2 border-primary hover:bg-pink-50 transition-all active:scale-95"
-                >
-                  Admin
-                </Link>
-              )}
-              
               {isAuthenticated ? (
                 <button 
                   onClick={handleLogout} 

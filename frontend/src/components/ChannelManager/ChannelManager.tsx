@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useChannels } from '../../hooks/useChannels';
-import './ChannelManager.css';
 
 export function ChannelManager() {
   const { channels, loading, error, addChannel, removeChannel } = useChannels();
@@ -48,59 +47,80 @@ export function ChannelManager() {
   };
   
   return (
-    <div className="channel-manager">
-      <h2>Channel Management</h2>
+    <div className="w-full p-6 bg-card rounded-xl border border-border">
+      <h2 className="m-0 mb-6 text-2xl font-medium text-foreground">Channel Management</h2>
       
-      <form onSubmit={handleAddChannel} className="add-channel-form">
+      <form onSubmit={handleAddChannel} className="flex gap-3 mb-6 md:flex-row flex-col">
         <input
           type="text"
           placeholder="Enter channel ID, @handle, or YouTube URL..."
           value={channelInput}
           onChange={(e) => setChannelInput(e.target.value)}
           disabled={adding}
-          className="channel-input"
+          className="flex-1 px-4 py-3 border border-border rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50"
         />
-        <button type="submit" disabled={adding || !channelInput.trim()} className="add-button">
+        <button 
+          type="submit" 
+          disabled={adding || !channelInput.trim()} 
+          className="px-6 py-3 bg-primary text-primary-foreground border-none rounded-md text-sm font-medium cursor-pointer whitespace-nowrap transition-all hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
           {adding ? 'Adding...' : 'Add Channel'}
         </button>
       </form>
       
-      {addError && <div className="alert alert-error">{addError}</div>}
-      {addSuccess && <div className="alert alert-success">{addSuccess}</div>}
+      {addError && (
+        <div className="px-4 py-3 rounded-md mb-4 text-sm bg-red-50 text-red-800 border border-red-200">
+          {addError}
+        </div>
+      )}
+      {addSuccess && (
+        <div className="px-4 py-3 rounded-md mb-4 text-sm bg-green-50 text-green-800 border border-green-200">
+          {addSuccess}
+        </div>
+      )}
       
-      {loading && <p>Loading channels...</p>}
-      {error && <div className="alert alert-error">{error}</div>}
+      {loading && <p className="text-foreground">Loading channels...</p>}
+      {error && (
+        <div className="px-4 py-3 rounded-md mb-4 text-sm bg-red-50 text-red-800 border border-red-200">
+          {error}
+        </div>
+      )}
       
       {!loading && channels.length === 0 && (
-        <p className="empty-message">No channels added yet. Add your first channel above!</p>
+        <p className="text-center py-12 px-6 text-muted-foreground text-sm">
+          No channels added yet. Add your first channel above!
+        </p>
       )}
       
       {channels.length > 0 && (
-        <div className="channels-list">
+        <div className="flex flex-col gap-4">
           {channels.map(channel => (
-            <div key={channel.id} className="channel-item">
+            <div 
+              key={channel.id} 
+              className="flex items-center gap-4 p-4 bg-muted rounded-lg border border-border md:flex-row flex-col md:items-center items-start"
+            >
               <img 
                 src={channel.thumbnailUrl} 
                 alt={channel.name}
-                className="channel-thumbnail"
+                className="w-20 h-20 md:w-20 md:h-20 w-15 h-15 rounded-full object-cover flex-shrink-0"
               />
-              <div className="channel-info">
-                <h3 className="channel-name">{channel.name}</h3>
-                <p className="channel-stats">
+              <div className="flex-1 min-w-0">
+                <h3 className="m-0 mb-1 text-base font-medium text-foreground">{channel.name}</h3>
+                <p className="m-0 mb-1 text-sm text-muted-foreground">
                   {formatNumber(channel.subscriberCount)} subscribers • {channel.videoCount} videos
                 </p>
                 {channel.lastFetchedAt && (
-                  <p className="channel-meta">
+                  <p className="m-0 text-xs text-muted-foreground/70">
                     Last updated: {new Date(channel.lastFetchedAt).toLocaleString()}
                   </p>
                 )}
                 {channel.fetchError && (
-                  <p className="channel-error">Error: {channel.fetchError}</p>
+                  <p className="m-0 text-xs text-red-600">Error: {channel.fetchError}</p>
                 )}
               </div>
               <button
                 onClick={() => handleRemoveChannel(channel.id, channel.name)}
-                className="remove-button"
+                className="px-4 py-2 bg-card text-red-600 border border-red-600 rounded-md text-sm font-medium cursor-pointer whitespace-nowrap transition-all hover:bg-red-600 hover:text-white md:self-auto self-end"
               >
                 Remove
               </button>
@@ -111,6 +131,3 @@ export function ChannelManager() {
     </div>
   );
 }
-
-
-

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useTimeLimit } from '../../hooks/useTimeLimit';
-import './VideoPlayer.css';
 
 interface VideoPlayerProps {
   videoId: string;
@@ -69,21 +68,39 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
   };
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <button className="close-button" onClick={handleClose}>×</button>
+    <div 
+      className="fixed inset-0 bg-black/90 flex items-center justify-center z-[1000] p-5 md:p-5 p-0"
+      onClick={handleClose}
+    >
+      <div 
+        className="relative w-full max-w-[1200px] bg-black rounded-lg overflow-hidden md:rounded-lg rounded-none md:max-w-[1200px] max-w-full"
+        onClick={e => e.stopPropagation()}
+      >
+        <button 
+          className="absolute -top-10 md:-top-10 top-2.5 right-0 md:right-0 right-2.5 bg-none border-none text-white text-4xl md:text-4xl text-[32px] cursor-pointer p-0 w-10 h-10 md:w-10 md:h-10 w-9 h-9 flex items-center justify-center z-[1001] hover:opacity-70 md:bg-none bg-black/70 md:rounded-none rounded-full"
+          onClick={handleClose}
+        >
+          ×
+        </button>
         {limitReached ? (
-          <div className="time-limit-message">
-            <h2>Daily Time Limit Reached</h2>
-            <p>You've reached your daily video watching limit. Come back tomorrow!</p>
-            <button onClick={handleClose} className="time-limit-button">Close</button>
+          <div className="py-[60px] px-10 md:py-[60px] md:px-10 py-10 px-5 text-center text-white min-h-[400px] flex flex-col items-center justify-center">
+            <h2 className="text-[28px] md:text-[28px] text-2xl mb-4 text-[#ff6b6b]">Daily Time Limit Reached</h2>
+            <p className="text-lg md:text-lg text-base mb-6 opacity-90">
+              You've reached your daily video watching limit. Come back tomorrow!
+            </p>
+            <button 
+              onClick={handleClose} 
+              className="bg-[#4a90e2] text-white border-none py-3 px-6 rounded-md text-base cursor-pointer font-medium transition-colors hover:bg-[#357abd]"
+            >
+              Close
+            </button>
           </div>
         ) : (
           <>
-            <div className="time-remaining-indicator">
+            <div className="absolute top-2.5 md:top-2.5 top-[50px] left-2.5 md:left-2.5 left-2.5 bg-black/70 text-white py-2 px-3 rounded text-sm md:text-sm text-xs z-[1002] font-medium">
               {Math.floor(remainingTime)} min remaining today
             </div>
-            <div className="video-container">
+            <div className="relative w-full pb-[56.25%]">
               <iframe
                 ref={iframeRef}
                 width="100%"
@@ -92,6 +109,7 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 title="YouTube video player"
+                className="absolute top-0 left-0 w-full h-full border-none"
               />
             </div>
           </>
@@ -100,6 +118,3 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
     </div>
   );
 }
-
-
-
