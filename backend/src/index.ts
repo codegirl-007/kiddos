@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { createServer } from 'http';
 import { validateEnv, env } from './config/env.js';
 import { runMigrations } from './db/migrate.js';
 import { createInitialAdmin } from './setup/initialSetup.js';
@@ -11,6 +12,7 @@ import settingsRoutes from './routes/settings.routes.js';
 import wordGroupsRoutes from './routes/wordGroups.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
+import { createWebSocketServer } from './services/websocket.service.js';
 
 async function startServer() {
   try {
@@ -52,8 +54,14 @@ async function startServer() {
     // Error handling
     app.use(errorHandler);
     
+    // Create HTTP server
+    const server = createServer(app);
+    
+    // Set up WebSocket server
+    createWebSocketServer(server);
+    
     // Start server
-    app.listen(env.port, () => {
+    server.listen(env.port, () => {
       console.log(`\n🚀 Server running on http://localhost:${env.port}`);
       console.log(`📊 Environment: ${env.nodeEnv}`);
       console.log(`🔒 CORS origin: ${env.corsOrigin}`);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { VideoApp } from '../pages/VideoApp';
 import { SpeechSoundsApp } from '../pages/SpeechSoundsApp';
+import { TicTacToeApp } from '../pages/TicTacToeApp';
 
 export type App = {
   id: string;
@@ -30,5 +31,14 @@ export const APPS: App[] = [
     link: '/speech-sounds',
     disabled: false,
     component: SpeechSoundsApp
+  },
+  {
+    id: 'tictactoe',
+    name: 'Tic Tac Toe',
+    description: 'Play multiplayer tic-tac-toe with friends!',
+    cta: 'Play Now',
+    link: '/tic-tac-toe',
+    disabled: false,
+    component: TicTacToeApp
   }
 ];

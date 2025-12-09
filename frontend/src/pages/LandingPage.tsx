@@ -4,12 +4,14 @@ import { APPS } from '../config/apps';
 const categoryEmojis: { [key: string]: string } = {
   videos: '📺',
   speechsounds: '🗣️',
+  tictactoe: '⭕',
   all: '🎮',
 };
 
 const categoryColors: { [key: string]: string } = {
   videos: 'pink',
   speechsounds: 'purple',
+  tictactoe: 'blue',
 };
 
 const colorMap: { [key: string]: string } = {
