@@ -71,7 +71,10 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         localStorage.removeItem('access_token');
-        window.location.href = '/login';
+        // Only redirect if we're not already on login page
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -124,7 +127,11 @@ export const settingsApi = {
   getTimeLimit: () => api.get('/settings/time-limit'),
   
   setTimeLimit: (dailyLimit: number) =>
-    api.put('/settings/time-limit', { dailyLimit })
+    api.put('/settings/time-limit', { dailyLimit }),
+  
+  heartbeat: (sessionId: string, route: string, video?: { title: string; channelName: string }, timeLimit?: { timeUsed: number; dailyLimit: number }) => api.post('/settings/heartbeat', { sessionId, route, videoTitle: video?.title, videoChannel: video?.channelName, timeUsed: timeLimit?.timeUsed, dailyLimit: timeLimit?.dailyLimit }),
+  
+  getConnectionStats: () => api.get('/settings/connection-stats')
 };
 
 // Word Groups API
@@ -146,6 +153,4 @@ export const wordGroupsApi = {
   deleteWord: (wordId: number) =>
     api.delete(`/word-groups/words/${wordId}`)
 };
-
-
 

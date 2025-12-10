@@ -1,17 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { useTimeLimit } from '../../hooks/useTimeLimit';
+import { setCurrentVideo } from '../../services/connectionTracker';
 
 interface VideoPlayerProps {
   videoId: string;
+  videoTitle?: string;
+  channelName?: string;
   onClose: () => void;
 }
 
-export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
+export function VideoPlayer({ videoId, videoTitle, channelName, onClose }: VideoPlayerProps) {
   const { limitReached, startTracking, stopTracking, remainingTime } = useTimeLimit();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const checkLimitIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Set video info for connection tracking
+    setCurrentVideo(videoTitle && channelName ? { title: videoTitle, channelName } : null);
+    
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
     
@@ -19,6 +25,7 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         stopTracking();
+        setCurrentVideo(null);
         onClose();
       }
     };
@@ -37,10 +44,13 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
           iframeRef.current.src = iframeRef.current.src.replace('autoplay=1', 'autoplay=0');
         }
         stopTracking();
+        setCurrentVideo(null);
       }
     }, 1000);
     
     return () => {
+      // Clear video info when player closes
+      setCurrentVideo(null);
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleEscape);
       stopTracking();
@@ -48,7 +58,7 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
         clearInterval(checkLimitIntervalRef.current);
       }
     };
-  }, [onClose, limitReached, startTracking, stopTracking]);
+  }, [videoId, videoTitle, channelName, onClose, limitReached, startTracking, stopTracking]);
 
   // Stop video immediately if limit reached
   useEffect(() => {
@@ -64,6 +74,7 @@ export function VideoPlayer({ videoId, onClose }: VideoPlayerProps) {
   
   const handleClose = () => {
     stopTracking();
+    setCurrentVideo(null);
     onClose();
   };
 

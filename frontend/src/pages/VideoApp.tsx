@@ -7,7 +7,7 @@ import { VideoPlayer } from '../components/VideoPlayer/VideoPlayer';
 
 export function VideoApp() {
   const [searchParams] = useSearchParams();
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<{ id: string; title: string; channelName: string } | null>(null);
   const { limitReached } = useTimeLimit();
   
   // Read from URL query params
@@ -37,7 +37,15 @@ export function VideoApp() {
     if (limitReached) {
       return; // Don't allow video to open if limit reached
     }
-    setSelectedVideo(videoId);
+    // Find the video to get title and channel name
+    const video = videos.find(v => v.id === videoId);
+    if (video) {
+      setSelectedVideo({
+        id: videoId,
+        title: video.title,
+        channelName: video.channelName
+      });
+    }
   };
   
   return (
@@ -61,7 +69,9 @@ export function VideoApp() {
       
       {selectedVideo && (
         <VideoPlayer
-          videoId={selectedVideo}
+          videoId={selectedVideo.id}
+          videoTitle={selectedVideo.title}
+          channelName={selectedVideo.channelName}
           onClose={() => setSelectedVideo(null)}
         />
       )}
