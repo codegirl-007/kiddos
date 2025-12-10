@@ -18,18 +18,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   useEffect(() => {
     // Check if user is logged in on mount
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      authApi.getCurrentUser()
-        .then((response: any) => setUser(response.data))
-        .catch(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // getCurrentUser will trigger token refresh via interceptor if needed
+        const response: any = await authApi.getCurrentUser();
+        setUser(response.data);
+      } catch (error: any) {
+        // If we get here, either:
+        // 1. Token refresh failed (refresh token expired/invalid)
+        // 2. Network error
+        // 3. User doesn't exist (unlikely)
+        
+        // Only clear auth if it's an auth-related error
+        // Don't clear on network errors - user might still be authenticated
+        const errorCode = error?.error?.code || error?.response?.data?.error?.code;
+        if (errorCode === 'UNAUTHORIZED' || errorCode === 'REFRESH_ERROR' || errorCode === 'INVALID_TOKEN') {
           setUser(null);
           localStorage.removeItem('access_token');
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+        } else {
+          // For other errors (network, etc.), keep the token but don't set user
+          // This prevents redirect loops while allowing retry
+          console.warn('Failed to get current user (non-auth error):', error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
   }, []);
   
   const login = async (username: string, password: string) => {
