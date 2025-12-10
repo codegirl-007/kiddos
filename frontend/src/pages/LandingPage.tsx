@@ -28,6 +28,7 @@ export function LandingPage() {
     <div className="bg-background">
       <section className="px-4 py-8">
         <div className="max-w-5xl mx-auto">
+          {/* First card is likely LCP element - prioritize it */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {APPS.map(app => {
               const color = categoryColors[app.id] || 'pink';
@@ -52,12 +53,30 @@ export function LandingPage() {
                         src="/video-marketing.png" 
                         alt="Video App" 
                         className="w-20 h-20 object-contain"
+                        width="80"
+                        height="80"
+                        loading="eager"
+                        fetchPriority={app.id === 'videos' ? 'high' : 'auto'}
                       />
                     ) : app.id === 'speechsounds' ? (
                       <img 
                         src="/unicorn-talking.png" 
                         alt="Speech Sounds" 
                         className="w-20 h-20 object-contain"
+                        width="80"
+                        height="80"
+                        loading="eager"
+                        fetchPriority="auto"
+                      />
+                    ) : app.id === 'tictactoe' ? (
+                      <img 
+                        src="/tic-tac-toe.png" 
+                        alt="Tic Tac Toe" 
+                        className="w-20 h-20 object-contain"
+                        width="80"
+                        height="80"
+                        loading="eager"
+                        fetchPriority="auto"
                       />
                     ) : (
                       <span className="text-5xl">{emoji}</span>

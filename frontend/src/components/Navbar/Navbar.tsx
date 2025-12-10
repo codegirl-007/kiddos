@@ -72,17 +72,25 @@ export function Navbar() {
         <div className="max-w-5xl mx-auto px-4 py-5">
           <div className="flex items-center gap-3 justify-between">
             <Link to="/" className="flex items-center gap-3">
-              <img 
-                src="/rainbow.png" 
-                alt="Rainbow" 
-                className="h-10 w-10 md:h-12 md:w-12 object-contain"
-              />
+                    <img
+                      src="/rainbow.png"
+                      alt="Rainbow"
+                      className="h-10 w-10 md:h-12 md:w-12 object-contain"
+                      width="48"
+                      height="48"
+                      loading="eager"
+                      fetchPriority="high"
+                    />
               <h1 className="text-3xl md:text-4xl font-bold text-foreground" style={{ fontFamily: "'Butterfly Kids', cursive" }}>Rainbows, Cupcakes & Unicorns</h1>
-              <img 
-                src="/cupcake.png" 
-                alt="Cupcake" 
-                className="h-10 w-10 md:h-12 md:w-12 object-contain"
-              />
+                    <img
+                      src="/cupcake.png"
+                      alt="Cupcake"
+                      className="h-10 w-10 md:h-12 md:w-12 object-contain"
+                      width="48"
+                      height="48"
+                      loading="eager"
+                      fetchPriority="high"
+                    />
             </Link>
             
             <div className="flex items-center gap-3">

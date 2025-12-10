@@ -1,7 +1,9 @@
-import React from 'react';
-import { VideoApp } from '../pages/VideoApp';
-import { SpeechSoundsApp } from '../pages/SpeechSoundsApp';
-import { TicTacToeApp } from '../pages/TicTacToeApp';
+import React, { lazy } from 'react';
+
+// Lazy load game pages for code splitting
+const VideoApp = lazy(() => import('../pages/VideoApp').then(module => ({ default: module.VideoApp })));
+const SpeechSoundsApp = lazy(() => import('../pages/SpeechSoundsApp').then(module => ({ default: module.SpeechSoundsApp })));
+const TicTacToeApp = lazy(() => import('../pages/TicTacToeApp').then(module => ({ default: module.TicTacToeApp })));
 
 export type App = {
   id: string;

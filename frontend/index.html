@@ -4,9 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Resource hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Butterfly+Kids&display=swap" rel="stylesheet">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <!-- Critical images preload -->
+    <link rel="preload" href="/rainbow.png" as="image" type="image/png" fetchpriority="high">
+    <link rel="preload" href="/cupcake.png" as="image" type="image/png" fetchpriority="high">
+    <!-- Preload first game icon (likely LCP element) -->
+    <link rel="preload" href="/video-marketing.png" as="image" type="image/png" fetchpriority="high">
+    <!-- Async font loading -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Butterfly+Kids&display=swap&text=Rainbows%2CCupcakesUnicorns" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Butterfly+Kids&display=swap" rel="stylesheet"></noscript>
     <title>Rainbow, Cupcakes & Unicorns - Free Games for Kids</title>
   </head>
   <body class="font-sans antialiased">
@@ -14,6 +24,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
-
-
