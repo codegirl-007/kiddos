@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { AuthProvider } from './hooks/useAuth';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navbar } from './components/Navbar/Navbar';
@@ -7,12 +7,14 @@ import { Footer } from './components/Footer/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
 import { APPS } from './config/apps';
+import { startConnectionTracking, stopConnectionTracking } from './services/connectionTracker';
 import './globals.css';
 
 // Lazy load admin and login pages
 const AdminPage = lazy(() => import('./pages/AdminPage').then(module => ({ default: module.AdminPage })));
 const VideosAdminPage = lazy(() => import('./pages/VideosAdminPage').then(module => ({ default: module.VideosAdminPage })));
 const SpeechSoundsAdminPage = lazy(() => import('./pages/SpeechSoundsAdminPage').then(module => ({ default: module.SpeechSoundsAdminPage })));
+const StatsAdminPage = lazy(() => import('./pages/StatsAdminPage').then(module => ({ default: module.StatsAdminPage })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
 
 // Loading fallback component
@@ -26,6 +28,16 @@ const PageLoader = () => (
 );
 
 function App() {
+  // Start connection tracking when app loads
+  useEffect(() => {
+    startConnectionTracking();
+    
+    // Stop tracking when app unmounts
+    return () => {
+      stopConnectionTracking();
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -71,6 +83,14 @@ function App() {
                     element={
                       <ProtectedRoute>
                         <SpeechSoundsAdminPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/stats"
+                    element={
+                      <ProtectedRoute>
+                        <StatsAdminPage />
                       </ProtectedRoute>
                     }
                   />
