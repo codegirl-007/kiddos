@@ -56,7 +56,7 @@ export function LandingPage() {
                         width="80"
                         height="80"
                         loading="eager"
-                        fetchpriority={app.id === 'videos' ? 'high' : 'auto'}
+                        fetchPriority={app.id === 'videos' ? 'high' : 'auto'}
                       />
                     ) : app.id === 'speechsounds' ? (
                       <img 
@@ -66,7 +66,7 @@ export function LandingPage() {
                         width="80"
                         height="80"
                         loading="eager"
-                        fetchpriority="auto"
+                        fetchPriority="auto"
                       />
                     ) : app.id === 'tictactoe' ? (
                       <img 
@@ -76,7 +76,7 @@ export function LandingPage() {
                         width="80"
                         height="80"
                         loading="eager"
-                        fetchpriority="auto"
+                        fetchPriority="auto"
                       />
                     ) : (
                       <span className="text-5xl">{emoji}</span>

@@ -79,7 +79,7 @@ export function Navbar() {
                       width="48"
                       height="48"
                       loading="eager"
-                      fetchpriority="high"
+                      fetchPriority="high"
                     />
               <h1 className="text-3xl md:text-4xl font-bold text-foreground" style={{ fontFamily: "'Butterfly Kids', cursive" }}>Rainbows, Cupcakes & Unicorns</h1>
                     <img
@@ -89,7 +89,7 @@ export function Navbar() {
                       width="48"
                       height="48"
                       loading="eager"
-                      fetchpriority="high"
+                      fetchPriority="high"
                     />
             </Link>
             
