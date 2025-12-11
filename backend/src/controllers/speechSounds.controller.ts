@@ -151,7 +151,8 @@ export async function clearPronunciationsCache(req: AuthRequest, res: Response) 
 
     // Delete all cached pronunciations
     const result = await db.execute({
-      sql: 'DELETE FROM word_pronunciations'
+      sql: 'DELETE FROM word_pronunciations',
+      args: []
     });
 
     res.json({
