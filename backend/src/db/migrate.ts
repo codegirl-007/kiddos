@@ -297,6 +297,41 @@ const migrations = [
         console.log('✓ Settings profiles tables already exist, skipping');
       }
     }
+  },
+  {
+    id: 7,
+    name: 'create_word_pronunciations',
+    up: async () => {
+      // Check if table already exists
+      const tableCheck = await db.execute(`
+        SELECT name FROM sqlite_master
+        WHERE type='table' AND name='word_pronunciations'
+      `);
+      
+      if (tableCheck.rows.length === 0) {
+        // Create word_pronunciations table
+        await db.execute(`
+          CREATE TABLE word_pronunciations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            word_id INTEGER NOT NULL,
+            voice_id TEXT NOT NULL DEFAULT 'default',
+            audio_data BLOB NOT NULL,
+            audio_format TEXT NOT NULL DEFAULT 'mp3',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (word_id) REFERENCES words(id) ON DELETE CASCADE,
+            UNIQUE(word_id, voice_id)
+          )
+        `);
+        
+        // Create indexes
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_word_pronunciations_word_id ON word_pronunciations(word_id)');
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_word_pronunciations_voice_id ON word_pronunciations(voice_id)');
+        
+        console.log('✓ Created word_pronunciations table');
+      } else {
+        console.log('✓ Word pronunciations table already exists, skipping');
+      }
+    }
   }
 ];
 

@@ -13,6 +13,7 @@ import wordGroupsRoutes from './routes/wordGroups.routes.js';
 import usersRoutes from './routes/users.routes.js';
 import settingsProfilesRoutes from './routes/settingsProfiles.routes.js';
 import magicCodeRoutes from './routes/magicCode.routes.js';
+import speechSoundsRoutes from './routes/speechSounds.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { createWebSocketServer } from './services/websocket.service.js';
@@ -56,6 +57,7 @@ async function startServer() {
     app.use('/api/users', usersRoutes);
     app.use('/api/settings-profiles', settingsProfilesRoutes);
     app.use('/api/magic-code', magicCodeRoutes);
+    app.use('/api/speech-sounds', speechSoundsRoutes);
     
     // Error handling
     app.use(errorHandler);

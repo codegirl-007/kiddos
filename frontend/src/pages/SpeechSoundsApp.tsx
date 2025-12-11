@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { wordGroupsApi } from '../services/apiClient';
+import { playWordPronunciation } from '../services/audioService';
 
 interface Word {
   id: number;
@@ -28,6 +29,8 @@ export function SpeechSoundsApp() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showWordPractice, setShowWordPractice] = useState(false);
+  const [playingWordId, setPlayingWordId] = useState<number | null>(null);
+  const [audioError, setAudioError] = useState<string | null>(null);
 
   // Load practice data from localStorage
   useEffect(() => {
@@ -125,6 +128,26 @@ export function SpeechSoundsApp() {
     setCurrentWordIndex(0);
   };
 
+  const handlePlayPronunciation = async (wordId: number) => {
+    try {
+      setPlayingWordId(wordId);
+      setAudioError(null);
+      await playWordPronunciation(wordId);
+      // Reset playing state after a short delay to allow audio to start
+      setTimeout(() => {
+        setPlayingWordId(null);
+      }, 100);
+    } catch (err: any) {
+      console.error('Error playing pronunciation:', err);
+      setAudioError('Unable to play pronunciation. Please try again.');
+      setPlayingWordId(null);
+      // Clear error after 3 seconds
+      setTimeout(() => {
+        setAudioError(null);
+      }, 3000);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-60px)] bg-background px-6 py-6 max-w-[900px] mx-auto">
@@ -179,14 +202,35 @@ export function SpeechSoundsApp() {
 
         <div className="bg-card rounded-[32px] p-10 shadow-lg border-4 border-primary">
           <div className="text-center mb-10">
-            <h2 
-              className="text-[72px] md:text-[72px] text-[48px] font-black mb-5 tracking-[4px] bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-[wordBounce_0.5s_ease-out]"
-              style={{
-                animation: 'wordBounce 0.5s ease-out',
-              }}
-            >
-              {currentWord.word}
-            </h2>
+            <div className="flex items-center justify-center gap-4 mb-5">
+              <h2 
+                className="text-[72px] md:text-[72px] text-[48px] font-black tracking-[4px] bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-[wordBounce_0.5s_ease-out]"
+                style={{
+                  animation: 'wordBounce 0.5s ease-out',
+                }}
+              >
+                {currentWord.word}
+              </h2>
+              <button
+                onClick={() => handlePlayPronunciation(currentWord.id)}
+                disabled={playingWordId === currentWord.id}
+                className={`w-16 h-16 rounded-full border-4 border-primary flex items-center justify-center text-3xl font-bold transition-all shadow-lg hover:scale-110 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed ${
+                  playingWordId === currentWord.id
+                    ? 'bg-primary text-primary-foreground animate-pulse'
+                    : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                }`}
+                title="Play pronunciation"
+              >
+                {playingWordId === currentWord.id ? (
+                  <span className="animate-spin">⟳</span>
+                ) : (
+                  '▶'
+                )}
+              </button>
+            </div>
+            {audioError && (
+              <p className="text-sm text-destructive mb-2">{audioError}</p>
+            )}
             <div className="flex justify-center gap-5 mt-5 flex-wrap">
               <span className="text-lg font-bold py-3 px-5 rounded-[25px] shadow-md border-[3px] bg-[#10b981] border-[#10b981] text-white">
                 ✓ {passCount} Pass
@@ -219,10 +263,10 @@ export function SpeechSoundsApp() {
                     <div className="flex gap-2.5">
                       <button
                         onClick={() => togglePractice(currentWord.id, i, 'pass')}
-                        className={`w-11 h-11 border-[3px] rounded-xl bg-white text-2xl font-bold cursor-pointer transition-all flex items-center justify-center shadow-md ${
+                        className={`w-11 h-11 border-[3px] rounded-xl text-2xl font-bold cursor-pointer transition-all flex items-center justify-center shadow-md ${
                           isPass 
                             ? 'bg-[#10b981] text-white border-[#10b981] scale-110 shadow-lg' 
-                            : 'text-[#065f46] border-[#10b981] hover:bg-[#10b981] hover:border-[#10b981] hover:text-white hover:scale-110 hover:shadow-lg'
+                            : 'bg-white text-[#065f46] border-[#10b981] hover:bg-[#10b981] hover:border-[#10b981] hover:text-white hover:scale-110 hover:shadow-lg'
                         }`}
                         title="Mark as pass"
                       >
@@ -230,10 +274,10 @@ export function SpeechSoundsApp() {
                       </button>
                       <button
                         onClick={() => togglePractice(currentWord.id, i, 'fail')}
-                        className={`w-11 h-11 border-[3px] rounded-xl bg-white text-2xl font-bold cursor-pointer transition-all flex items-center justify-center shadow-md ${
+                        className={`w-11 h-11 border-[3px] rounded-xl text-2xl font-bold cursor-pointer transition-all flex items-center justify-center shadow-md ${
                           isFail 
                             ? 'bg-[#ef4444] text-white border-[#ef4444] scale-110 shadow-lg' 
-                            : 'text-[#991b1b] border-[#ef4444] hover:bg-[#ef4444] hover:border-[#ef4444] hover:text-white hover:scale-110 hover:shadow-lg'
+                            : 'bg-white text-[#991b1b] border-[#ef4444] hover:bg-[#ef4444] hover:border-[#ef4444] hover:text-white hover:scale-110 hover:shadow-lg'
                         }`}
                         title="Mark as fail"
                       >

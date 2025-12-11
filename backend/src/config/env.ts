@@ -15,7 +15,8 @@ const optionalEnvVars = {
   NODE_ENV: 'development',
   ACCESS_TOKEN_EXPIRY: '15m',
   REFRESH_TOKEN_EXPIRY: '7d',
-  INITIAL_ADMIN_USERNAME: 'admin'
+  INITIAL_ADMIN_USERNAME: 'admin',
+  ELEVENLABS_API_KEY: ''
 } as const;
 
 export function validateEnv() {
@@ -55,7 +56,8 @@ export const env = {
   accessTokenExpiry: process.env.ACCESS_TOKEN_EXPIRY!,
   refreshTokenExpiry: process.env.REFRESH_TOKEN_EXPIRY!,
   initialAdminUsername: process.env.INITIAL_ADMIN_USERNAME,
-  initialAdminPassword: process.env.INITIAL_ADMIN_PASSWORD
+  initialAdminPassword: process.env.INITIAL_ADMIN_PASSWORD,
+  elevenLabsApiKey: process.env.ELEVENLABS_API_KEY || ''
 };
 
 
