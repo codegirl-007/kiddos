@@ -260,7 +260,9 @@ function SettingsProfileFormModal({
   const [name, setName] = useState(profile?.name || '');
   const [description, setDescription] = useState(profile?.description || '');
   const [dailyTimeLimit, setDailyTimeLimit] = useState(profile?.dailyTimeLimit?.toString() || '30');
-  const [enabledApps, setEnabledApps] = useState<string[]>(profile?.enabledApps || []);
+  // Default enabled apps: speechsounds and tictactoe (videos is disabled by default)
+  const defaultEnabledApps = APPS.filter(app => !app.disabled && app.id !== 'videos').map(app => app.id);
+  const [enabledApps, setEnabledApps] = useState<string[]>(profile?.enabledApps ?? defaultEnabledApps);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -321,7 +323,7 @@ function SettingsProfileFormModal({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Emma's iPad"
+              placeholder="e.g., Kid 1's iPad"
               className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               required
             />
@@ -381,12 +383,7 @@ function SettingsProfileFormModal({
                 </label>
               ))}
             </div>
-            {enabledApps.length === 0 && (
-              <p className="text-xs text-muted-foreground mt-2 italic">
-                All apps will be enabled (including videos)
-              </p>
-            )}
-          </div>
+         </div>
 
           {profile && (
             <div className="mb-6 p-4 bg-muted rounded-lg">
