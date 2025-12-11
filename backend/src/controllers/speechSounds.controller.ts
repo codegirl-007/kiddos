@@ -77,8 +77,8 @@ export async function pronounceWord(req: AuthRequest, res: Response) {
     try {
       const { audio, format } = await generateSpeech(wordText, voiceId);
 
-      // Store in cache
-      await db.execute({
+      // Store in cache (don't await - cache in background to return faster)
+      db.execute({
         sql: `
           INSERT INTO word_pronunciations (word_id, voice_id, audio_data, audio_format)
           VALUES (?, ?, ?, ?)
@@ -88,9 +88,12 @@ export async function pronounceWord(req: AuthRequest, res: Response) {
             created_at = CURRENT_TIMESTAMP
         `,
         args: [wordId, voiceId, audio, format]
+      }).catch(err => {
+        console.error('Error caching pronunciation:', err);
+        // Don't fail the request if caching fails
       });
 
-      // Return audio
+      // Return audio immediately
       const contentType = format === 'mp3' ? 'audio/mpeg' : 
                          format === 'wav' ? 'audio/wav' : 
                          format === 'ogg' ? 'audio/ogg' : 'audio/mpeg';
@@ -113,11 +116,22 @@ export async function pronounceWord(req: AuthRequest, res: Response) {
         });
       }
 
+      // Handle timeout errors
+      if (error.message.includes('timed out')) {
+        return res.status(504).json({
+          success: false,
+          error: {
+            code: 'SPEECH_GENERATION_TIMEOUT',
+            message: 'Speech generation timed out. Please try again.'
+          }
+        });
+      }
+
       return res.status(500).json({
         success: false,
         error: {
           code: 'SPEECH_GENERATION_ERROR',
-          message: 'Failed to generate speech pronunciation'
+          message: error.message || 'Failed to generate speech pronunciation'
         }
       });
     }

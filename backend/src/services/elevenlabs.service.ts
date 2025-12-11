@@ -27,6 +27,10 @@ export async function generateSpeech(
   }
 
   try {
+    // Add timeout to prevent gateway timeouts (30 seconds)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
     const response = await fetch(`${ELEVENLABS_API_URL}/text-to-speech/${voiceId}`, {
       method: 'POST',
       headers: {
@@ -38,8 +42,11 @@ export async function generateSpeech(
         text: text.trim(),
         model_id: 'eleven_turbo_v2_5'
         // No voice_settings - uses the voice's default settings from ElevenLabs
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -65,6 +72,9 @@ export async function generateSpeech(
       format
     };
   } catch (error: any) {
+    if (error.name === 'AbortError') {
+      throw new Error('ElevenLabs API request timed out after 30 seconds');
+    }
     if (error.message.includes('ElevenLabs API error')) {
       throw error;
     }
