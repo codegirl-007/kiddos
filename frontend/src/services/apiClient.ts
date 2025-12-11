@@ -196,3 +196,8 @@ export const magicCodeApi = {
   getSettingsByCode: (code: string) => api.get(`/magic-code/${code}`)
 };
 
+// Speech Sounds API (admin only)
+export const speechSoundsApi = {
+  clearPronunciationsCache: () => api.delete('/speech-sounds/cache')
+};
+
