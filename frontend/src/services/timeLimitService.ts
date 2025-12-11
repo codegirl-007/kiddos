@@ -13,6 +13,18 @@ let limitCacheTime: number = 0;
 const LIMIT_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
+ * Get local date string in YYYY-MM-DD format (not UTC)
+ * This ensures the daily reset happens at local midnight, not UTC midnight
+ */
+function getLocalDateString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
  * Get time limit data from localStorage (for usage tracking only)
  */
 function getTimeLimitData(): Omit<TimeLimitData, 'dailyLimit'> {
@@ -22,7 +34,7 @@ function getTimeLimitData(): Omit<TimeLimitData, 'dailyLimit'> {
       const data = JSON.parse(stored);
       return {
         dailyTimeUsed: data.dailyTimeUsed || 0,
-        lastResetDate: data.lastResetDate || new Date().toISOString().split('T')[0]
+        lastResetDate: data.lastResetDate || getLocalDateString()
       };
     }
   } catch (e) {
@@ -32,7 +44,7 @@ function getTimeLimitData(): Omit<TimeLimitData, 'dailyLimit'> {
   // Return default data
   return {
     dailyTimeUsed: 0,
-    lastResetDate: new Date().toISOString().split('T')[0]
+    lastResetDate: getLocalDateString()
   };
 }
 
@@ -52,7 +64,7 @@ function saveTimeLimitData(data: Omit<TimeLimitData, 'dailyLimit'>): void {
  */
 function shouldResetDaily(): boolean {
   const data = getTimeLimitData();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getLocalDateString();
   return data.lastResetDate !== today;
 }
 
@@ -63,7 +75,7 @@ function resetIfNeeded(): void {
   if (shouldResetDaily()) {
     const data = getTimeLimitData();
     data.dailyTimeUsed = 0;
-    data.lastResetDate = new Date().toISOString().split('T')[0];
+    data.lastResetDate = getLocalDateString();
     saveTimeLimitData(data);
   }
 }
@@ -166,6 +178,6 @@ export function addTimeSpent(seconds: number): void {
 export function resetDailyCounter(): void {
   const data = getTimeLimitData();
   data.dailyTimeUsed = 0;
-  data.lastResetDate = new Date().toISOString().split('T')[0];
+  data.lastResetDate = getLocalDateString();
   saveTimeLimitData(data);
 }
