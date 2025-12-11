@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router-dom';
 import { isAppEnabled } from '../utils/appFilter';
 
 interface AppRouteGuardProps {

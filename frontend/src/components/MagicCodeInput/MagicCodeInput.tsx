@@ -33,7 +33,7 @@ export function MagicCodeInput({ onApplied, onClose }: MagicCodeInputProps) {
 
     try {
       setLoading(true);
-      const appliedSettings = await applyMagicCode(normalizedCode);
+      await applyMagicCode(normalizedCode);
       setSuccess(true);
       setCode('');
       

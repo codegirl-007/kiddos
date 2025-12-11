@@ -89,7 +89,7 @@ export async function getDailyLimit(): Promise<number> {
   try {
     const { getMagicCodeSettings } = await import('./magicCodeService');
     const magicCodeSettings = getMagicCodeSettings();
-    if (magicCodeSettings?.dailyTimeLimit !== null && magicCodeSettings.dailyTimeLimit !== undefined) {
+    if (magicCodeSettings && magicCodeSettings.dailyTimeLimit !== null && magicCodeSettings.dailyTimeLimit !== undefined) {
       return magicCodeSettings.dailyTimeLimit;
     }
   } catch (error) {
@@ -143,7 +143,7 @@ export function getDailyLimitSync(): number {
     const stored = localStorage.getItem(MAGIC_CODE_SETTINGS_KEY);
     if (stored) {
       const magicCodeSettings = JSON.parse(stored);
-      if (magicCodeSettings?.dailyTimeLimit !== null && magicCodeSettings.dailyTimeLimit !== undefined) {
+      if (magicCodeSettings && magicCodeSettings.dailyTimeLimit !== null && magicCodeSettings.dailyTimeLimit !== undefined) {
         return magicCodeSettings.dailyTimeLimit;
       }
     }
