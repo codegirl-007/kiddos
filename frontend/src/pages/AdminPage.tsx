@@ -79,6 +79,21 @@ export function AdminPage() {
             Manage admin and user accounts
           </p>
         </Link>
+
+        <Link 
+          to="/admin/settings-profiles" 
+          className="bg-amber-100 hover:bg-amber-200 w-full p-6 rounded-3xl font-semibold text-foreground transition-all active:scale-95 hover:shadow-lg flex flex-col items-center text-center no-underline"
+        >
+          <div className="mb-3">
+            <div className="w-20 h-20 flex items-center justify-center text-4xl">
+              ✨
+            </div>
+          </div>
+          <h2 className="text-xl font-bold mb-1">Settings Profiles</h2>
+          <p className="text-sm opacity-75">
+            Create magic codes for child settings
+          </p>
+        </Link>
       </div>
     </div>
   );

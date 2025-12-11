@@ -171,3 +171,28 @@ export const usersApi = {
     api.put(`/users/${id}/password`, { password })
 };
 
+// Settings Profiles API (admin only)
+export const settingsProfilesApi = {
+  getAll: () => api.get('/settings-profiles'),
+  
+  getById: (id: number) => api.get(`/settings-profiles/${id}`),
+  
+  create: (data: { name: string; description?: string; dailyTimeLimit: number }) =>
+    api.post('/settings-profiles', data),
+  
+  update: (id: number, data: { name?: string; description?: string; isActive?: boolean }) =>
+    api.put(`/settings-profiles/${id}`, data),
+  
+  delete: (id: number) => api.delete(`/settings-profiles/${id}`),
+  
+  updateSettings: (id: number, settings: { dailyTimeLimit: number }) =>
+    api.put(`/settings-profiles/${id}/settings`, settings),
+  
+  regenerateCode: (id: number) => api.post(`/settings-profiles/${id}/regenerate-code`)
+};
+
+// Magic Code API (public)
+export const magicCodeApi = {
+  getSettingsByCode: (code: string) => api.get(`/magic-code/${code}`)
+};
+

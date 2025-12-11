@@ -42,6 +42,17 @@ export interface AdminUser {
   lastLogin?: string;
 }
 
+export interface SettingsProfile {
+  id: number;
+  magicCode: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+  dailyTimeLimit: number | null;
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;

@@ -16,6 +16,7 @@ const VideosAdminPage = lazy(() => import('./pages/VideosAdminPage').then(module
 const SpeechSoundsAdminPage = lazy(() => import('./pages/SpeechSoundsAdminPage').then(module => ({ default: module.SpeechSoundsAdminPage })));
 const StatsAdminPage = lazy(() => import('./pages/StatsAdminPage').then(module => ({ default: module.StatsAdminPage })));
 const UsersAdminPage = lazy(() => import('./pages/UsersAdminPage').then(module => ({ default: module.UsersAdminPage })));
+const SettingsProfilesAdminPage = lazy(() => import('./pages/SettingsProfilesAdminPage').then(module => ({ default: module.SettingsProfilesAdminPage })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
 
 // Loading fallback component
@@ -100,6 +101,14 @@ function App() {
                     element={
                       <ProtectedRoute requireAdmin={true}>
                         <UsersAdminPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/settings-profiles"
+                    element={
+                      <ProtectedRoute requireAdmin={true}>
+                        <SettingsProfilesAdminPage />
                       </ProtectedRoute>
                     }
                   />

@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { APPS } from '../config/apps';
 import { OptimizedImage } from '../components/OptimizedImage/OptimizedImage';
+import { MagicCodeInput } from '../components/MagicCodeInput/MagicCodeInput';
+import { getAppliedMagicCode } from '../services/magicCodeService';
 
 const categoryEmojis: { [key: string]: string } = {
   videos: '📺',
@@ -25,10 +28,32 @@ const colorMap: { [key: string]: string } = {
 };
 
 export function LandingPage() {
+  const [showMagicCodeModal, setShowMagicCodeModal] = useState(false);
+  const appliedCode = getAppliedMagicCode();
+
   return (
     <div className="bg-background">
+      {showMagicCodeModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <MagicCodeInput
+            onApplied={() => setShowMagicCodeModal(false)}
+            onClose={() => setShowMagicCodeModal(false)}
+          />
+        </div>
+      )}
+      
       <section className="px-4 py-8">
         <div className="max-w-5xl mx-auto">
+          {!appliedCode && (
+            <div className="mb-6 text-center">
+              <button
+                onClick={() => setShowMagicCodeModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-full font-semibold text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-md"
+              >
+                ✨ Enter Magic Code
+              </button>
+            </div>
+          )}
           {/* First card is likely LCP element - prioritize it */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {APPS.map(app => {

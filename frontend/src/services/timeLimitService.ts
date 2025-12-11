@@ -81,10 +81,21 @@ function resetIfNeeded(): void {
 }
 
 /**
- * Get current time limit configuration from server
- * Falls back to cached value or default if server unavailable
+ * Get current time limit configuration
+ * Priority: Magic code settings > Server settings > Cached > Default
  */
 export async function getDailyLimit(): Promise<number> {
+  // Check magic code settings first (highest priority)
+  try {
+    const { getMagicCodeSettings } = await import('./magicCodeService');
+    const magicCodeSettings = getMagicCodeSettings();
+    if (magicCodeSettings?.dailyTimeLimit !== null && magicCodeSettings.dailyTimeLimit !== undefined) {
+      return magicCodeSettings.dailyTimeLimit;
+    }
+  } catch (error) {
+    console.warn('Failed to check magic code settings:', error);
+  }
+
   // Return cached value if still valid
   const now = Date.now();
   if (cachedDailyLimit !== null && (now - limitCacheTime) < LIMIT_CACHE_DURATION) {
@@ -121,9 +132,25 @@ export async function setDailyLimit(minutes: number): Promise<void> {
 }
 
 /**
- * Synchronous version for use in hooks (uses cached value)
+ * Synchronous version for use in hooks (uses cached value or magic code settings)
+ * Note: Magic code settings are checked synchronously from localStorage
  */
 export function getDailyLimitSync(): number {
+  // Check magic code settings first (highest priority)
+  // We can access localStorage synchronously
+  try {
+    const MAGIC_CODE_SETTINGS_KEY = 'magic_code_settings';
+    const stored = localStorage.getItem(MAGIC_CODE_SETTINGS_KEY);
+    if (stored) {
+      const magicCodeSettings = JSON.parse(stored);
+      if (magicCodeSettings?.dailyTimeLimit !== null && magicCodeSettings.dailyTimeLimit !== undefined) {
+        return magicCodeSettings.dailyTimeLimit;
+      }
+    }
+  } catch (error) {
+    // Ignore errors in sync context
+  }
+
   return cachedDailyLimit ?? DEFAULT_DAILY_LIMIT;
 }
 

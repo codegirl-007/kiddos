@@ -242,6 +242,61 @@ const migrations = [
         throw error;
       }
     }
+  },
+  {
+    id: 6,
+    name: 'create_settings_profiles',
+    up: async () => {
+      // Check if tables already exist
+      const profilesTableCheck = await db.execute(`
+        SELECT name FROM sqlite_master
+        WHERE type='table' AND name='settings_profiles'
+      `);
+      
+      if (profilesTableCheck.rows.length === 0) {
+        // Create settings_profiles table
+        await db.execute(`
+          CREATE TABLE settings_profiles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            magic_code TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT,
+            created_by INTEGER NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            is_active BOOLEAN DEFAULT 1,
+            FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+          )
+        `);
+        
+        // Create indexes
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_settings_profiles_magic_code ON settings_profiles(magic_code)');
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_settings_profiles_created_by ON settings_profiles(created_by)');
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_settings_profiles_is_active ON settings_profiles(is_active)');
+        
+        // Create settings_profile_values table
+        await db.execute(`
+          CREATE TABLE settings_profile_values (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            profile_id INTEGER NOT NULL,
+            setting_key TEXT NOT NULL,
+            setting_value TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (profile_id) REFERENCES settings_profiles(id) ON DELETE CASCADE,
+            UNIQUE(profile_id, setting_key)
+          )
+        `);
+        
+        // Create indexes
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_settings_profile_values_profile_id ON settings_profile_values(profile_id)');
+        await db.execute('CREATE INDEX IF NOT EXISTS idx_settings_profile_values_key ON settings_profile_values(setting_key)');
+        
+        console.log('✓ Created settings_profiles and settings_profile_values tables');
+      } else {
+        console.log('✓ Settings profiles tables already exist, skipping');
+      }
+    }
   }
 ];
 

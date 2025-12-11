@@ -11,6 +11,8 @@ import videoRoutes from './routes/videos.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
 import wordGroupsRoutes from './routes/wordGroups.routes.js';
 import usersRoutes from './routes/users.routes.js';
+import settingsProfilesRoutes from './routes/settingsProfiles.routes.js';
+import magicCodeRoutes from './routes/magicCode.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { createWebSocketServer } from './services/websocket.service.js';
@@ -52,6 +54,8 @@ async function startServer() {
     app.use('/api/settings', settingsRoutes);
     app.use('/api/word-groups', wordGroupsRoutes);
     app.use('/api/users', usersRoutes);
+    app.use('/api/settings-profiles', settingsProfilesRoutes);
+    app.use('/api/magic-code', magicCodeRoutes);
     
     // Error handling
     app.use(errorHandler);
