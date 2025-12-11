@@ -94,9 +94,10 @@ export async function createUser(req: AuthRequest, res: Response) {
     });
 
     // Get created user
+    const newUserId = Number(result.lastInsertRowid);
     const newUser = await db.execute({
       sql: 'SELECT id, username, role, created_at FROM users WHERE id = ?',
-      args: [result.lastInsertRowid]
+      args: [newUserId]
     });
 
     res.status(201).json({
@@ -366,6 +367,16 @@ export async function changePassword(req: AuthRequest, res: Response) {
     }
 
     // Allow admin to change any password, or user to change their own
+    if (!req.userId) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        }
+      });
+    }
+
     if (userId !== req.userId) {
       // Check if requester is admin (this should already be checked by middleware, but double-check)
       const requester = await db.execute({

@@ -55,8 +55,9 @@ export async function getAllProfiles(req: AuthRequest, res: Response) {
       }
       
       const profile = profilesMap.get(profileId)!;
-      if (row.setting_key) {
-        profile.settings[row.setting_key] = row.setting_value;
+      const settingKey = row.setting_key as string | null;
+      if (settingKey) {
+        profile.settings[settingKey] = row.setting_value as string;
       }
     }
 
@@ -231,7 +232,7 @@ export async function createProfile(req: AuthRequest, res: Response) {
       args: [magicCode, name.trim(), description?.trim() || null, req.userId]
     });
 
-    const profileId = profileResult.lastInsertRowid as number;
+    const profileId = Number(profileResult.lastInsertRowid);
 
     // Add settings
     await db.execute({
