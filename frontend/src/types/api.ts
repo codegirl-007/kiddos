@@ -30,6 +30,15 @@ export interface Video {
 export interface User {
   id: number;
   username: string;
+  role?: 'admin' | 'user';
+  lastLogin?: string;
+}
+
+export interface AdminUser {
+  id: number;
+  username: string;
+  role: 'admin' | 'user';
+  createdAt: string;
   lastLogin?: string;
 }
 

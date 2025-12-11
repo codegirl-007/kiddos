@@ -65,7 +65,8 @@ export async function login(req: AuthRequest, res: Response) {
       data: {
         user: {
           id: user.id,
-          username: user.username
+          username: user.username,
+          role: user.role || 'user'
         },
         accessToken,
         refreshToken
@@ -162,7 +163,7 @@ export async function getCurrentUser(req: AuthRequest, res: Response) {
     }
 
     const result = await db.execute({
-      sql: 'SELECT id, username, last_login FROM users WHERE id = ?',
+      sql: 'SELECT id, username, role, last_login FROM users WHERE id = ?',
       args: [req.userId]
     });
     
@@ -183,6 +184,7 @@ export async function getCurrentUser(req: AuthRequest, res: Response) {
       data: {
         id: user.id,
         username: user.username,
+        role: user.role || 'user',
         lastLogin: user.last_login
       }
     });

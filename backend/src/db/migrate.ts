@@ -164,6 +164,84 @@ const migrations = [
       await db.execute('CREATE INDEX IF NOT EXISTS idx_words_group_id ON words(word_group_id)');
       await db.execute('CREATE INDEX IF NOT EXISTS idx_words_word ON words(word)');
     }
+  },
+  {
+    id: 4,
+    name: 'add_user_roles',
+    up: async () => {
+      try {
+        console.log('  Checking if role column exists...');
+        const columnCheck = await db.execute(`
+          SELECT 1 FROM pragma_table_info('users')
+          WHERE name = 'role'
+        `);
+
+        if (!columnCheck.rows.length) {
+          console.log('  Role column not found, adding it...');
+          // Add role column with default 'user'
+          await db.execute(`
+            ALTER TABLE users
+            ADD COLUMN role TEXT DEFAULT 'user' NOT NULL
+          `);
+          console.log('  ✓ Role column added');
+          
+          // Create index on role for faster queries
+          await db.execute('CREATE INDEX IF NOT EXISTS idx_users_role ON users(role)');
+          console.log('  ✓ Index created');
+          
+          // Set all existing users to 'admin' (backward compatibility)
+          // This ensures existing admin users remain admins
+          const updateResult = await db.execute(`
+            UPDATE users
+            SET role = 'admin'
+          `);
+          console.log(`  ✓ Updated existing users to admin role`);
+        } else {
+          console.log('  ✓ Role column already exists, skipping');
+        }
+      } catch (error: any) {
+        console.error('  ❌ Error in migration:', error.message);
+        throw error;
+      }
+    }
+  },
+  {
+    id: 5,
+    name: 'drop_pets_table',
+    up: async () => {
+      try {
+        console.log('  Checking if pets table exists...');
+        // Check if pets table exists by trying to query sqlite_master
+        const tableCheck = await db.execute(`
+          SELECT name FROM sqlite_master
+          WHERE type='table' AND name='pets'
+        `);
+
+        console.log(`  Table check result: ${tableCheck.rows.length} rows found`);
+        if (tableCheck.rows.length > 0) {
+          console.log('  Pets table found, dropping it...');
+          await db.execute('DROP TABLE IF EXISTS pets');
+          console.log('  ✓ Pets table dropped');
+          
+          // Verify it was actually dropped
+          const verifyCheck = await db.execute(`
+            SELECT name FROM sqlite_master
+            WHERE type='table' AND name='pets'
+          `);
+          if (verifyCheck.rows.length === 0) {
+            console.log('  ✓ Verified: pets table successfully removed');
+          } else {
+            throw new Error('DROP TABLE appeared to succeed but table still exists');
+          }
+        } else {
+          console.log('  ✓ Pets table does not exist, skipping');
+        }
+      } catch (error: any) {
+        console.error('  ❌ Error in migration:', error.message);
+        console.error('  Full error:', error);
+        throw error;
+      }
+    }
   }
 ];
 
@@ -178,22 +256,116 @@ export async function runMigrations() {
   `);
   
   // Get executed migrations
-  const executed = await db.execute('SELECT id FROM migrations');
+  const executed = await db.execute('SELECT id, name FROM migrations ORDER BY id');
   const executedIds = new Set(executed.rows.map(r => r.id));
+  
+  if (executed.rows.length > 0) {
+    console.log('Already executed migrations:');
+    executed.rows.forEach((row: any) => {
+      console.log(`  - ${row.id}: ${row.name}`);
+    });
+  }
   
   // Run pending migrations
   for (const migration of migrations) {
     if (!executedIds.has(migration.id)) {
-      console.log(`Running migration: ${migration.name}...`);
-      await migration.up();
-      await db.execute({
-        sql: 'INSERT INTO migrations (id, name) VALUES (?, ?)',
-        args: [migration.id, migration.name]
-      });
-      console.log(`✓ Migration ${migration.name} completed`);
+      console.log(`\n🔄 Running migration: ${migration.name} (id: ${migration.id})...`);
+      try {
+        await migration.up();
+        await db.execute({
+          sql: 'INSERT INTO migrations (id, name) VALUES (?, ?)',
+          args: [migration.id, migration.name]
+        });
+        console.log(`✅ Migration ${migration.name} completed\n`);
+      } catch (error: any) {
+        console.error(`❌ Migration ${migration.name} failed:`, error);
+        console.error('Error details:', error.message);
+        throw error;
+      }
+    } else {
+      console.log(`⏭️  Migration ${migration.name} (id: ${migration.id}) already executed, skipping`);
     }
   }
   
-  console.log('✓ All migrations completed');
+  console.log('✅ All migrations completed');
+  
+  // Verify critical migrations actually worked - fix if needed
+  try {
+    // Verify role column exists
+    await db.execute('SELECT role FROM users LIMIT 1');
+    console.log('✅ Verified: role column exists');
+  } catch (error: any) {
+    if (error.message?.includes('no such column: role') || error.code === 'SQL_INPUT_ERROR') {
+      console.error('⚠️  WARNING: Migration 4 marked as executed but role column missing!');
+      console.log('🔧 Attempting to fix by running migration 4 again...');
+      
+      // Check if migration 4 is marked as executed
+      const migration4Check = await db.execute({
+        sql: 'SELECT id FROM migrations WHERE id = ?',
+        args: [4]
+      });
+      
+      if (migration4Check.rows.length > 0) {
+        // Migration is marked as executed but column doesn't exist - fix it
+        console.log('  Removing migration 4 from tracking table...');
+        await db.execute({
+          sql: 'DELETE FROM migrations WHERE id = ?',
+          args: [4]
+        });
+        console.log('  Re-running migration 4...');
+        const migration4 = migrations.find(m => m.id === 4);
+        if (migration4) {
+          await migration4.up();
+          await db.execute({
+            sql: 'INSERT INTO migrations (id, name) VALUES (?, ?)',
+            args: [4, 'add_user_roles']
+          });
+          console.log('✅ Migration 4 fixed and completed');
+        }
+      }
+    }
+  }
+  
+  // Verify pets table was removed
+  try {
+    const petsCheck = await db.execute(`
+      SELECT name FROM sqlite_master
+      WHERE type='table' AND name='pets'
+    `);
+    
+    if (petsCheck.rows.length > 0) {
+      console.error('⚠️  WARNING: Migration 5 marked as executed but pets table still exists!');
+      console.log('🔧 Attempting to fix by running migration 5 again...');
+      
+      // Check if migration 5 is marked as executed
+      const migration5Check = await db.execute({
+        sql: 'SELECT id FROM migrations WHERE id = ?',
+        args: [5]
+      });
+      
+      if (migration5Check.rows.length > 0) {
+        // Migration is marked as executed but table still exists - fix it
+        console.log('  Removing migration 5 from tracking table...');
+        await db.execute({
+          sql: 'DELETE FROM migrations WHERE id = ?',
+          args: [5]
+        });
+        console.log('  Re-running migration 5...');
+        const migration5 = migrations.find(m => m.id === 5);
+        if (migration5) {
+          await migration5.up();
+          await db.execute({
+            sql: 'INSERT INTO migrations (id, name) VALUES (?, ?)',
+            args: [5, 'drop_pets_table']
+          });
+          console.log('✅ Migration 5 fixed and completed');
+        }
+      }
+    } else {
+      console.log('✅ Verified: pets table does not exist');
+    }
+  } catch (error: any) {
+    console.error('⚠️  Error verifying pets table removal:', error.message);
+  }
 }
 

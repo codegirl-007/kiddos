@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { APPS } from '../config/apps';
+import { OptimizedImage } from '../components/OptimizedImage/OptimizedImage';
 
 const categoryEmojis: { [key: string]: string } = {
   videos: '📺',
@@ -49,32 +50,32 @@ export function LandingPage() {
                 >
                   <div className="mb-3">
                     {app.id === 'videos' ? (
-                      <img 
+                      <OptimizedImage 
                         src="/video-marketing.png" 
                         alt="Video App" 
                         className="w-20 h-20 object-contain"
-                        width="80"
-                        height="80"
+                        width={80}
+                        height={80}
                         loading="eager"
                         fetchPriority={app.id === 'videos' ? 'high' : 'auto'}
                       />
                     ) : app.id === 'speechsounds' ? (
-                      <img 
+                      <OptimizedImage 
                         src="/unicorn-talking.png" 
                         alt="Speech Sounds" 
                         className="w-20 h-20 object-contain"
-                        width="80"
-                        height="80"
+                        width={80}
+                        height={80}
                         loading="eager"
                         fetchPriority="auto"
                       />
                     ) : app.id === 'tictactoe' ? (
-                      <img 
+                      <OptimizedImage 
                         src="/tic-tac-toe.png" 
                         alt="Tic Tac Toe" 
                         className="w-20 h-20 object-contain"
-                        width="80"
-                        height="80"
+                        width={80}
+                        height={80}
                         loading="eager"
                         fetchPriority="auto"
                       />

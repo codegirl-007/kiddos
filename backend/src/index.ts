@@ -10,6 +10,7 @@ import channelRoutes from './routes/channels.routes.js';
 import videoRoutes from './routes/videos.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
 import wordGroupsRoutes from './routes/wordGroups.routes.js';
+import usersRoutes from './routes/users.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { createWebSocketServer } from './services/websocket.service.js';
@@ -50,6 +51,7 @@ async function startServer() {
     app.use('/api/videos', videoRoutes);
     app.use('/api/settings', settingsRoutes);
     app.use('/api/word-groups', wordGroupsRoutes);
+    app.use('/api/users', usersRoutes);
     
     // Error handling
     app.use(errorHandler);

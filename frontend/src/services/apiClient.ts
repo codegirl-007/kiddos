@@ -154,3 +154,20 @@ export const wordGroupsApi = {
     api.delete(`/word-groups/words/${wordId}`)
 };
 
+// Users API (admin only)
+export const usersApi = {
+  getAll: () => api.get('/users'),
+  
+  create: (userData: { username: string; password: string; role?: 'admin' | 'user' }) =>
+    api.post('/users', userData),
+  
+  update: (id: number, userData: { username?: string; role?: 'admin' | 'user' }) =>
+    api.put(`/users/${id}`, userData),
+  
+  delete: (id: number) =>
+    api.delete(`/users/${id}`),
+  
+  changePassword: (id: number, password: string) =>
+    api.put(`/users/${id}/password`, { password })
+};
+

@@ -3,9 +3,10 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useChannels } from '../../hooks/useChannels';
 import { APPS } from '../../config/apps';
+import { OptimizedImage } from '../OptimizedImage/OptimizedImage';
 
 export function Navbar() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, isAdmin } = useAuth();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { channels } = useChannels();
@@ -72,22 +73,22 @@ export function Navbar() {
         <div className="max-w-5xl mx-auto px-4 py-5">
           <div className="flex items-center gap-3 justify-between">
             <Link to="/" className="flex items-center gap-3">
-                    <img
+                    <OptimizedImage
                       src="/rainbow.png"
                       alt="Rainbow"
                       className="h-10 w-10 md:h-12 md:w-12 object-contain"
-                      width="48"
-                      height="48"
+                      width={48}
+                      height={48}
                       loading="eager"
                       fetchPriority="high"
                     />
               <h1 className="text-3xl md:text-4xl font-bold text-foreground" style={{ fontFamily: "'Butterfly Kids', cursive" }}>Rainbows, Cupcakes & Unicorns</h1>
-                    <img
+                    <OptimizedImage
                       src="/cupcake.png"
                       alt="Cupcake"
                       className="h-10 w-10 md:h-12 md:w-12 object-contain"
-                      width="48"
-                      height="48"
+                      width={48}
+                      height={48}
                       loading="eager"
                       fetchPriority="high"
                     />
@@ -104,6 +105,19 @@ export function Navbar() {
               >
                 Home
               </Link>
+              
+              {isAdmin && (
+                <Link 
+                  to="/admin" 
+                  className={`text-sm font-semibold px-3 py-2 rounded-full transition-all active:scale-95 ${
+                    location.pathname.startsWith('/admin')
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'bg-white text-foreground border-2 border-primary hover:bg-pink-50'
+                  }`}
+                >
+                  Admin
+                </Link>
+              )}
               
               {isAuthenticated ? (
                 <button 

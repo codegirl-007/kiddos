@@ -18,8 +18,8 @@ export async function createInitialAdmin() {
     
     const hash = await bcrypt.hash(password, 10);
     await db.execute({
-      sql: 'INSERT INTO users (username, password_hash) VALUES (?, ?)',
-      args: [username, hash]
+      sql: 'INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)',
+      args: [username, hash, 'admin']
     });
     
     console.log(`✓ Initial admin user created: ${username}`);

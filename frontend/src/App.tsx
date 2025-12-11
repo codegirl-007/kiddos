@@ -15,6 +15,7 @@ const AdminPage = lazy(() => import('./pages/AdminPage').then(module => ({ defau
 const VideosAdminPage = lazy(() => import('./pages/VideosAdminPage').then(module => ({ default: module.VideosAdminPage })));
 const SpeechSoundsAdminPage = lazy(() => import('./pages/SpeechSoundsAdminPage').then(module => ({ default: module.SpeechSoundsAdminPage })));
 const StatsAdminPage = lazy(() => import('./pages/StatsAdminPage').then(module => ({ default: module.StatsAdminPage })));
+const UsersAdminPage = lazy(() => import('./pages/UsersAdminPage').then(module => ({ default: module.UsersAdminPage })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
 
 // Loading fallback component
@@ -65,7 +66,7 @@ function App() {
                   <Route
                     path="/admin"
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute requireAdmin={true}>
                         <AdminPage />
                       </ProtectedRoute>
                     }
@@ -73,7 +74,7 @@ function App() {
                   <Route
                     path="/admin/videos"
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute requireAdmin={true}>
                         <VideosAdminPage />
                       </ProtectedRoute>
                     }
@@ -81,7 +82,7 @@ function App() {
                   <Route
                     path="/admin/speech-sounds"
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute requireAdmin={true}>
                         <SpeechSoundsAdminPage />
                       </ProtectedRoute>
                     }
@@ -89,8 +90,16 @@ function App() {
                   <Route
                     path="/admin/stats"
                     element={
-                      <ProtectedRoute>
+                      <ProtectedRoute requireAdmin={true}>
                         <StatsAdminPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/users"
+                    element={
+                      <ProtectedRoute requireAdmin={true}>
+                        <UsersAdminPage />
                       </ProtectedRoute>
                     }
                   />
