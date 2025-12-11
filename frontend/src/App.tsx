@@ -5,6 +5,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navbar } from './components/Navbar/Navbar';
 import { Footer } from './components/Footer/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AppRouteGuard } from './components/AppRouteGuard';
 import { LandingPage } from './pages/LandingPage';
 import { APPS } from './config/apps';
 import { startConnectionTracking, stopConnectionTracking } from './services/connectionTracker';
@@ -50,15 +51,17 @@ function App() {
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   <Route path="/" element={<LandingPage />} />
-                  {/* Dynamically generate routes for enabled apps */}
+                  {/* Dynamically generate routes for apps */}
                   {APPS.filter(app => !app.disabled).map(app => (
                     <Route 
                       key={app.id} 
                       path={app.link} 
                       element={
-                        <Suspense fallback={<PageLoader />}>
-                          <app.component />
-                        </Suspense>
+                        <AppRouteGuard appId={app.id}>
+                          <Suspense fallback={<PageLoader />}>
+                            <app.component />
+                          </Suspense>
+                        </AppRouteGuard>
                       } 
                     />
                   ))}

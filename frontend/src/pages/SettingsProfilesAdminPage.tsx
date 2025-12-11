@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { settingsProfilesApi } from '../services/apiClient';
 import { SettingsProfile } from '../types/api';
+import { APPS } from '../config/apps';
 
 export function SettingsProfilesAdminPage() {
   const [profiles, setProfiles] = useState<SettingsProfile[]>([]);
@@ -140,6 +141,7 @@ export function SettingsProfilesAdminPage() {
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Magic Code</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Time Limit</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Enabled Apps</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Created</th>
                   <th className="px-6 py-3 text-right text-xs font-semibold text-foreground uppercase">Actions</th>
@@ -165,6 +167,22 @@ export function SettingsProfilesAdminPage() {
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">
                       {formatTime(profile.dailyTimeLimit)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
+                      {profile.enabledApps && profile.enabledApps.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {profile.enabledApps.map(appId => {
+                            const app = APPS.find(a => a.id === appId);
+                            return app ? (
+                              <span key={appId} className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                                {app.name}
+                              </span>
+                            ) : null;
+                          })}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">All apps</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -242,8 +260,17 @@ function SettingsProfileFormModal({
   const [name, setName] = useState(profile?.name || '');
   const [description, setDescription] = useState(profile?.description || '');
   const [dailyTimeLimit, setDailyTimeLimit] = useState(profile?.dailyTimeLimit?.toString() || '30');
+  const [enabledApps, setEnabledApps] = useState<string[]>(profile?.enabledApps || []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const toggleApp = (appId: string) => {
+    setEnabledApps(prev => 
+      prev.includes(appId) 
+        ? prev.filter(id => id !== appId)
+        : [...prev, appId]
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -265,10 +292,10 @@ function SettingsProfileFormModal({
       if (profile) {
         // Update existing profile
         await settingsProfilesApi.update(profile.id, { name, description });
-        await settingsProfilesApi.updateSettings(profile.id, { dailyTimeLimit: limit });
+        await settingsProfilesApi.updateSettings(profile.id, { dailyTimeLimit: limit, enabledApps });
       } else {
         // Create new profile
-        await settingsProfilesApi.create({ name, description, dailyTimeLimit: limit });
+        await settingsProfilesApi.create({ name, description, dailyTimeLimit: limit, enabledApps });
       }
       onSuccess();
     } catch (err: any) {
@@ -328,6 +355,37 @@ function SettingsProfileFormModal({
             <p className="text-xs text-muted-foreground mt-1">
               Maximum minutes per day children can watch videos
             </p>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              Enabled Apps
+            </label>
+            <p className="text-xs text-muted-foreground mb-3">
+              Select which apps children can access. Leave all unchecked to allow all apps (including videos).
+            </p>
+            <div className="space-y-2">
+              {APPS.filter(app => !app.disabled).map(app => (
+                <label
+                  key={app.id}
+                  className="flex items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted/50 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={enabledApps.includes(app.id)}
+                    onChange={() => toggleApp(app.id)}
+                    className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
+                  />
+                  <span className="text-sm text-foreground font-medium">{app.name}</span>
+                  <span className="text-xs text-muted-foreground ml-auto">{app.description}</span>
+                </label>
+              ))}
+            </div>
+            {enabledApps.length === 0 && (
+              <p className="text-xs text-muted-foreground mt-2 italic">
+                All apps will be enabled (including videos)
+              </p>
+            )}
           </div>
 
           {profile && (

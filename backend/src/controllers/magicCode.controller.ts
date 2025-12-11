@@ -52,9 +52,22 @@ export async function getSettingsByCode(req: Request, res: Response) {
       // Parse numeric values
       if (key === 'daily_time_limit_minutes') {
         settings[key] = parseInt(value, 10);
+      } else if (key === 'enabled_apps') {
+        // Parse JSON array
+        try {
+          settings[key] = JSON.parse(value);
+        } catch (e) {
+          console.warn('Failed to parse enabled_apps:', e);
+          settings[key] = [];
+        }
       } else {
         settings[key] = value;
       }
+    }
+
+    let enabledApps: string[] = [];
+    if (settings.enabled_apps && Array.isArray(settings.enabled_apps)) {
+      enabledApps = settings.enabled_apps;
     }
 
     res.json({
@@ -62,7 +75,8 @@ export async function getSettingsByCode(req: Request, res: Response) {
       data: {
         magicCode: profile.magic_code,
         settings,
-        dailyTimeLimit: settings.daily_time_limit_minutes || null
+        dailyTimeLimit: settings.daily_time_limit_minutes || null,
+        enabledApps
       }
     });
   } catch (error: any) {

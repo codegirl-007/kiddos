@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { APPS } from '../config/apps';
 import { OptimizedImage } from '../components/OptimizedImage/OptimizedImage';
 import { MagicCodeInput } from '../components/MagicCodeInput/MagicCodeInput';
 import { getAppliedMagicCode } from '../services/magicCodeService';
+import { getEnabledApps } from '../utils/appFilter';
 
 const categoryEmojis: { [key: string]: string } = {
   videos: '📺',
@@ -29,14 +29,23 @@ const colorMap: { [key: string]: string } = {
 
 export function LandingPage() {
   const [showMagicCodeModal, setShowMagicCodeModal] = useState(false);
+  const [enabledApps, setEnabledApps] = useState(getEnabledApps());
   const appliedCode = getAppliedMagicCode();
+
+  // Re-check enabled apps when magic code is applied/cleared
+  useEffect(() => {
+    setEnabledApps(getEnabledApps());
+  }, [appliedCode]);
 
   return (
     <div className="bg-background">
       {showMagicCodeModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <MagicCodeInput
-            onApplied={() => setShowMagicCodeModal(false)}
+            onApplied={() => {
+              setShowMagicCodeModal(false);
+              setEnabledApps(getEnabledApps());
+            }}
             onClose={() => setShowMagicCodeModal(false)}
           />
         </div>
@@ -56,22 +65,15 @@ export function LandingPage() {
           )}
           {/* First card is likely LCP element - prioritize it */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {APPS.map(app => {
+            {enabledApps.map(app => {
               const color = categoryColors[app.id] || 'pink';
               const emoji = categoryEmojis[app.id] || '🎮';
               
               return (
                 <Link
                   key={app.id}
-                  to={app.disabled ? '#' : app.link}
-                  className={`${colorMap[color]} w-full p-6 rounded-3xl font-semibold text-foreground transition-all active:scale-95 hover:shadow-lg flex flex-col items-center text-center ${
-                    app.disabled ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                  onClick={(e) => {
-                    if (app.disabled) {
-                      e.preventDefault();
-                    }
-                  }}
+                  to={app.link}
+                  className={`${colorMap[color]} w-full p-6 rounded-3xl font-semibold text-foreground transition-all active:scale-95 hover:shadow-lg flex flex-col items-center text-center`}
                 >
                   <div className="mb-3">
                     {app.id === 'videos' ? (

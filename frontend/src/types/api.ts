@@ -51,6 +51,7 @@ export interface SettingsProfile {
   updatedAt: string;
   isActive: boolean;
   dailyTimeLimit: number | null;
+  enabledApps?: string[];
 }
 
 export interface ApiResponse<T = any> {

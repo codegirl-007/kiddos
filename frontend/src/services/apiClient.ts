@@ -177,7 +177,7 @@ export const settingsProfilesApi = {
   
   getById: (id: number) => api.get(`/settings-profiles/${id}`),
   
-  create: (data: { name: string; description?: string; dailyTimeLimit: number }) =>
+  create: (data: { name: string; description?: string; dailyTimeLimit: number; enabledApps?: string[] }) =>
     api.post('/settings-profiles', data),
   
   update: (id: number, data: { name?: string; description?: string; isActive?: boolean }) =>
@@ -185,7 +185,7 @@ export const settingsProfilesApi = {
   
   delete: (id: number) => api.delete(`/settings-profiles/${id}`),
   
-  updateSettings: (id: number, settings: { dailyTimeLimit: number }) =>
+  updateSettings: (id: number, settings: { dailyTimeLimit?: number; enabledApps?: string[] }) =>
     api.put(`/settings-profiles/${id}/settings`, settings),
   
   regenerateCode: (id: number) => api.post(`/settings-profiles/${id}/regenerate-code`)

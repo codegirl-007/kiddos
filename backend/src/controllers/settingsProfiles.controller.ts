@@ -60,12 +60,24 @@ export async function getAllProfiles(req: AuthRequest, res: Response) {
       }
     }
 
-    const profiles = Array.from(profilesMap.values()).map(profile => ({
-      ...profile,
-      dailyTimeLimit: profile.settings.daily_time_limit_minutes 
-        ? parseInt(profile.settings.daily_time_limit_minutes, 10) 
-        : null
-    }));
+    const profiles = Array.from(profilesMap.values()).map(profile => {
+      let enabledApps: string[] = [];
+      if (profile.settings.enabled_apps) {
+        try {
+          enabledApps = JSON.parse(profile.settings.enabled_apps);
+        } catch (e) {
+          console.warn('Failed to parse enabled_apps for profile', profile.id);
+        }
+      }
+      
+      return {
+        ...profile,
+        dailyTimeLimit: profile.settings.daily_time_limit_minutes 
+          ? parseInt(profile.settings.daily_time_limit_minutes, 10) 
+          : null,
+        enabledApps
+      };
+    });
 
     res.json({
       success: true,
@@ -135,6 +147,15 @@ export async function getProfile(req: AuthRequest, res: Response) {
       settings[row.setting_key as string] = row.setting_value as string;
     }
 
+    let enabledApps: string[] = [];
+    if (settings.enabled_apps) {
+      try {
+        enabledApps = JSON.parse(settings.enabled_apps);
+      } catch (e) {
+        console.warn('Failed to parse enabled_apps for profile', profileId);
+      }
+    }
+
     res.json({
       success: true,
       data: {
@@ -148,7 +169,8 @@ export async function getProfile(req: AuthRequest, res: Response) {
         settings,
         dailyTimeLimit: settings.daily_time_limit_minutes 
           ? parseInt(settings.daily_time_limit_minutes, 10) 
-          : null
+          : null,
+        enabledApps
       }
     });
   } catch (error: any) {
@@ -175,7 +197,7 @@ export async function createProfile(req: AuthRequest, res: Response) {
       });
     }
 
-    const { name, description, dailyTimeLimit } = req.body;
+    const { name, description, dailyTimeLimit, enabledApps } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({
@@ -219,6 +241,17 @@ export async function createProfile(req: AuthRequest, res: Response) {
       `,
       args: [profileId, 'daily_time_limit_minutes', dailyTimeLimit.toString()]
     });
+
+    // Add enabled apps if provided
+    if (enabledApps && Array.isArray(enabledApps)) {
+      await db.execute({
+        sql: `
+          INSERT INTO settings_profile_values (profile_id, setting_key, setting_value)
+          VALUES (?, ?, ?)
+        `,
+        args: [profileId, 'enabled_apps', JSON.stringify(enabledApps)]
+      });
+    }
 
     // Get created profile
     const createdProfile = await db.execute({
@@ -453,7 +486,7 @@ export async function updateProfileSettings(req: AuthRequest, res: Response) {
       });
     }
 
-    const { dailyTimeLimit } = req.body;
+    const { dailyTimeLimit, enabledApps } = req.body;
 
     // Verify ownership
     const existing = await db.execute({
@@ -492,6 +525,30 @@ export async function updateProfileSettings(req: AuthRequest, res: Response) {
             updated_at = excluded.updated_at
         `,
         args: [profileId, 'daily_time_limit_minutes', dailyTimeLimit.toString(), new Date().toISOString()]
+      });
+    }
+
+    if (enabledApps !== undefined) {
+      if (!Array.isArray(enabledApps)) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ENABLED_APPS',
+            message: 'enabledApps must be an array'
+          }
+        });
+      }
+
+      // Update or insert setting
+      await db.execute({
+        sql: `
+          INSERT INTO settings_profile_values (profile_id, setting_key, setting_value, updated_at)
+          VALUES (?, ?, ?, ?)
+          ON CONFLICT(profile_id, setting_key) DO UPDATE SET
+            setting_value = excluded.setting_value,
+            updated_at = excluded.updated_at
+        `,
+        args: [profileId, 'enabled_apps', JSON.stringify(enabledApps), new Date().toISOString()]
       });
     }
 
