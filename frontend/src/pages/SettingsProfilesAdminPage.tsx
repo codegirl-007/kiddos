@@ -22,14 +22,14 @@ export function SettingsProfilesAdminPage() {
       const response: any = await settingsProfilesApi.getAll();
       setProfiles(response.data);
     } catch (err: any) {
-      setError(err.error?.message || 'Failed to load settings profiles');
+      setError(err.error?.message || 'Failed to load Magic Codes');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (profileId: number) => {
-    if (!confirm('Are you sure you want to delete this settings profile? The magic code will no longer work.')) {
+    if (!confirm('Are you sure you want to delete this magic code? The magic code will no longer work.')) {
       return;
     }
 
@@ -37,7 +37,7 @@ export function SettingsProfilesAdminPage() {
       await settingsProfilesApi.delete(profileId);
       await loadProfiles();
     } catch (err: any) {
-      alert(err.error?.message || 'Failed to delete profile');
+      alert(err.error?.message || 'Failed to delete magic code');
     }
   };
 
@@ -88,7 +88,7 @@ export function SettingsProfilesAdminPage() {
       <div className="min-h-[calc(100vh-60px)] bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
-          <p className="text-muted-foreground">Loading settings profiles...</p>
+          <p className="text-muted-foreground">Loading magic codes...</p>
         </div>
       </div>
     );
@@ -103,8 +103,8 @@ export function SettingsProfilesAdminPage() {
         >
           ← Back to Admin
         </Link>
-        <h1 className="m-0 mb-2 text-[28px] font-medium text-foreground">Settings Profiles</h1>
-        <p className="m-0 text-sm text-muted-foreground">Create magic codes to apply settings for children without accounts</p>
+        <h1 className="m-0 mb-2 text-[28px] font-medium text-foreground">Magic Codes</h1>
+        <p className="m-0 text-sm text-muted-foreground">Create magic codes to manage settings for children</p>
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
@@ -125,12 +125,12 @@ export function SettingsProfilesAdminPage() {
 
         {profiles.length === 0 ? (
           <div className="bg-card rounded-lg border border-border p-12 text-center">
-            <p className="text-muted-foreground mb-4">No settings profiles yet.</p>
+            <p className="text-muted-foreground mb-4">No magic codes yet.</p>
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-full font-semibold text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-md"
             >
-              Create Your First Profile
+              Create Your First Magic Code
             </button>
           </div>
         ) : (
@@ -309,7 +309,7 @@ function SettingsProfileFormModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-lg border border-border max-w-md w-full p-6">
         <h2 className="text-xl font-bold text-foreground mb-4">
-          {profile ? 'Edit Settings Profile' : 'Create Settings Profile'}
+          {profile ? 'Edit Magic Code' : 'Create Magic Code'}
         </h2>
         
         <form onSubmit={handleSubmit}>

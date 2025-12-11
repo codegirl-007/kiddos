@@ -59,9 +59,9 @@ export function AdminPage() {
               📊
             </div>
           </div>
-          <h2 className="text-xl font-bold mb-1">Connection Stats</h2>
+          <h2 className="text-xl font-bold mb-1">Activity</h2>
           <p className="text-sm opacity-75">
-            View active user connections and routes
+            View active users using your magic codes
           </p>
         </Link>
 
@@ -70,9 +70,15 @@ export function AdminPage() {
           className="bg-green-100 hover:bg-green-200 w-full p-6 rounded-3xl font-semibold text-foreground transition-all active:scale-95 hover:shadow-lg flex flex-col items-center text-center no-underline"
         >
           <div className="mb-3">
-            <div className="w-20 h-20 flex items-center justify-center text-4xl">
-              👥
-            </div>
+            <OptimizedImage 
+              src="/group.png" 
+              alt="User Management" 
+              className="w-20 h-20 object-contain"
+              width={80}
+              height={80}
+              loading="lazy"
+              disableWebP={true}
+            />
           </div>
           <h2 className="text-xl font-bold mb-1">User Management</h2>
           <p className="text-sm opacity-75">
@@ -85,11 +91,17 @@ export function AdminPage() {
           className="bg-amber-100 hover:bg-amber-200 w-full p-6 rounded-3xl font-semibold text-foreground transition-all active:scale-95 hover:shadow-lg flex flex-col items-center text-center no-underline"
         >
           <div className="mb-3">
-            <div className="w-20 h-20 flex items-center justify-center text-4xl">
-              ✨
-            </div>
+            <OptimizedImage 
+              src="/magic-wand.png" 
+              alt="Magic Codes" 
+              className="w-20 h-20 object-contain"
+              width={80}
+              height={80}
+              loading="lazy"
+              disableWebP={true}
+            />
           </div>
-          <h2 className="text-xl font-bold mb-1">Settings Profiles</h2>
+          <h2 className="text-xl font-bold mb-1">Magic Codes</h2>
           <p className="text-sm opacity-75">
             Create magic codes for child settings
           </p>
