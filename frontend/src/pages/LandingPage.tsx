@@ -16,6 +16,7 @@ const categoryColors: { [key: string]: string } = {
   videos: 'pink',
   speechsounds: 'purple',
   tictactoe: 'blue',
+  drawingpad: 'amber',
 };
 
 const colorMap: { [key: string]: string } = {
@@ -105,6 +106,17 @@ export function LandingPage() {
                         height={80}
                         loading="eager"
                         fetchPriority="auto"
+                      />
+                    ) : app.id === 'drawingpad' ? (
+                      <OptimizedImage 
+                        src="/drawing.png" 
+                        alt="Drawing Pad" 
+                        className="w-20 h-20 object-contain"
+                        width={80}
+                        height={80}
+                        loading="eager"
+                        fetchPriority="auto"
+                        disableWebP={true}
                       />
                     ) : (
                       <span className="text-5xl">{emoji}</span>
