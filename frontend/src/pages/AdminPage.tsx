@@ -106,6 +106,7 @@ export function AdminPage() {
             Create magic codes for child settings
           </p>
         </Link>
+
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import React, { lazy } from 'react';
 const VideoApp = lazy(() => import('../pages/VideoApp').then(module => ({ default: module.VideoApp })));
 const SpeechSoundsApp = lazy(() => import('../pages/SpeechSoundsApp').then(module => ({ default: module.SpeechSoundsApp })));
 const TicTacToeApp = lazy(() => import('../pages/TicTacToeApp').then(module => ({ default: module.TicTacToeApp })));
+const DrawingPadApp = lazy(() => import('../pages/DrawingPadApp').then(module => ({ default: module.DrawingPadApp })));
 
 export type App = {
   id: string;
@@ -42,5 +43,14 @@ export const APPS: App[] = [
     link: '/tic-tac-toe',
     disabled: false,
     component: TicTacToeApp
+  },
+  {
+    id: 'drawingpad',
+    name: 'Drawing Pad',
+    description: 'Draw and create your own artwork!',
+    cta: 'Start Drawing',
+    link: '/drawing-pad',
+    disabled: false,
+    component: DrawingPadApp
   }
 ];

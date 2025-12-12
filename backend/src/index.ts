@@ -2,6 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { createServer } from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { validateEnv, env } from './config/env.js';
 import { runMigrations } from './db/migrate.js';
 import { createInitialAdmin } from './setup/initialSetup.js';
@@ -17,6 +19,9 @@ import speechSoundsRoutes from './routes/speechSounds.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { createWebSocketServer } from './services/websocket.service.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function startServer() {
   try {
@@ -39,8 +44,20 @@ async function startServer() {
       origin: env.corsOrigin,
       credentials: true
     }));
-    app.use(express.json());
+    app.use(express.json({ limit: '10mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '10mb' }));
     app.use(cookieParser());
+    
+    // Serve uploaded files statically (use absolute path)
+    const uploadsPath = path.join(__dirname, '../uploads');
+    app.use('/uploads', (req, res, next) => {
+      // Set CORS headers for image files to allow pixel data reading
+      // Use * for static files since they don't need credentials
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET');
+      next();
+    }, express.static(uploadsPath));
+    
     app.use('/api', apiLimiter);
     
     // Health check (for DigitalOcean)
