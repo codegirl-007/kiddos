@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useTimeLimit } from '../../hooks/useTimeLimit';
 import { setCurrentVideo } from '../../services/connectionTracker';
 
 interface VideoPlayerProps {
@@ -10,9 +9,7 @@ interface VideoPlayerProps {
 }
 
 export function VideoPlayer({ videoId, videoTitle, channelName, onClose }: VideoPlayerProps) {
-  const { limitReached, startTracking, stopTracking, remainingTime } = useTimeLimit();
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const checkLimitIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Set video info for connection tracking
@@ -24,56 +21,21 @@ export function VideoPlayer({ videoId, videoTitle, channelName, onClose }: Video
     // Handle Escape key
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        stopTracking();
         setCurrentVideo(null);
         onClose();
       }
     };
     window.addEventListener('keydown', handleEscape);
     
-    // Start tracking time when player opens
-    if (!limitReached) {
-      startTracking();
-    }
-    
-    // Check limit periodically and stop video if reached
-    checkLimitIntervalRef.current = setInterval(() => {
-      if (limitReached && iframeRef.current) {
-        // Stop the video by removing autoplay and reloading with paused state
-        if (iframeRef.current.src.includes('autoplay=1')) {
-          iframeRef.current.src = iframeRef.current.src.replace('autoplay=1', 'autoplay=0');
-        }
-        stopTracking();
-        setCurrentVideo(null);
-      }
-    }, 1000);
-    
     return () => {
       // Clear video info when player closes
       setCurrentVideo(null);
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleEscape);
-      stopTracking();
-      if (checkLimitIntervalRef.current) {
-        clearInterval(checkLimitIntervalRef.current);
-      }
     };
-  }, [videoId, videoTitle, channelName, onClose, limitReached, startTracking, stopTracking]);
-
-  // Stop video immediately if limit reached
-  useEffect(() => {
-    if (limitReached && iframeRef.current) {
-      // Change iframe src to stop autoplay
-      const currentSrc = iframeRef.current.src;
-      if (currentSrc.includes('autoplay=1')) {
-        iframeRef.current.src = currentSrc.replace('autoplay=1', 'autoplay=0');
-      }
-      stopTracking();
-    }
-  }, [limitReached, stopTracking]);
+  }, [videoId, videoTitle, channelName, onClose]);
   
   const handleClose = () => {
-    stopTracking();
     setCurrentVideo(null);
     onClose();
   };
@@ -93,38 +55,18 @@ export function VideoPlayer({ videoId, videoTitle, channelName, onClose }: Video
         >
           ×
         </button>
-        {limitReached ? (
-          <div className="py-[60px] px-10 md:py-[60px] md:px-10 py-10 px-5 text-center text-white min-h-[400px] flex flex-col items-center justify-center">
-            <h2 className="text-[28px] md:text-[28px] text-2xl mb-4 text-[#ff6b6b]">Daily Time Limit Reached</h2>
-            <p className="text-lg md:text-lg text-base mb-6 opacity-90">
-              You've reached your daily video watching limit. Come back tomorrow!
-            </p>
-            <button 
-              onClick={handleClose} 
-              className="bg-[#4a90e2] text-white border-none py-3 px-6 rounded-md text-base cursor-pointer font-medium transition-colors hover:bg-[#357abd]"
-            >
-              Close
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="absolute top-2.5 md:top-2.5 top-[50px] left-2.5 md:left-2.5 left-2.5 bg-black/70 text-white py-2 px-3 rounded text-sm md:text-sm text-xs z-[1002] font-medium">
-              {Math.floor(remainingTime)} min remaining today
-            </div>
-            <div className="relative w-full pb-[56.25%]">
-              <iframe
-                ref={iframeRef}
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="YouTube video player"
-                className="absolute top-0 left-0 w-full h-full border-none"
-              />
-            </div>
-          </>
-        )}
+        <div className="relative w-full pb-[56.25%]">
+          <iframe
+            ref={iframeRef}
+            width="100%"
+            height="100%"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="YouTube video player"
+            className="absolute top-0 left-0 w-full h-full border-none"
+          />
+        </div>
       </div>
     </div>
   );

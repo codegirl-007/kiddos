@@ -26,7 +26,7 @@ export function AdminPage() {
           </div>
           <h2 className="text-xl font-bold mb-1">Video App</h2>
           <p className="text-sm opacity-75">
-            Manage YouTube channels and video time limits
+            Manage YouTube channels
           </p>
         </Link>
         

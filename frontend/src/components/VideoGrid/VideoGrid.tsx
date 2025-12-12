@@ -9,7 +9,6 @@ interface VideoGridProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  disabled?: boolean;
 }
 
 export function VideoGrid({ 
@@ -19,12 +18,11 @@ export function VideoGrid({
   onVideoClick,
   page,
   totalPages,
-  onPageChange,
-  disabled = false
+  onPageChange
 }: VideoGridProps) {
   if (loading) {
     return (
-      <div className={`grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 py-8 px-6 max-w-[1600px] mx-auto ${disabled ? 'pointer-events-none' : ''}`}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 py-8 px-6 max-w-[1600px] mx-auto">
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="w-full aspect-video bg-muted rounded-2xl"></div>
@@ -60,13 +58,12 @@ export function VideoGrid({
   
   return (
     <div>
-      <div className={`grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 py-8 px-6 max-w-[1600px] mx-auto md:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] md:gap-6 md:py-8 md:px-6 grid-cols-1 gap-4 p-4 ${disabled ? 'pointer-events-none' : ''}`}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 py-8 px-6 max-w-[1600px] mx-auto md:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] md:gap-6 md:py-8 md:px-6 grid-cols-1 gap-4 p-4">
         {videos.map(video => (
           <VideoCard
             key={video.id}
             video={video}
-            onClick={() => !disabled && onVideoClick(video.id)}
-            disabled={disabled}
+            onClick={() => onVideoClick(video.id)}
           />
         ))}
       </div>

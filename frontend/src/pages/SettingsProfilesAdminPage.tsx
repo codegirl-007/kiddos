@@ -75,13 +75,6 @@ export function SettingsProfilesAdminPage() {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const formatTime = (minutes: number | null) => {
-    if (!minutes) return 'Not set';
-    if (minutes < 60) return `${minutes} min`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
-  };
 
   if (loading) {
     return (
@@ -140,7 +133,6 @@ export function SettingsProfilesAdminPage() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Magic Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Time Limit</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Enabled Apps</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-foreground uppercase">Created</th>
@@ -164,9 +156,6 @@ export function SettingsProfilesAdminPage() {
                           📋
                         </button>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">
-                      {formatTime(profile.dailyTimeLimit)}
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">
                       {profile.enabledApps && profile.enabledApps.length > 0 ? (
@@ -259,7 +248,6 @@ function SettingsProfileFormModal({
 }) {
   const [name, setName] = useState(profile?.name || '');
   const [description, setDescription] = useState(profile?.description || '');
-  const [dailyTimeLimit, setDailyTimeLimit] = useState(profile?.dailyTimeLimit?.toString() || '30');
   // Default enabled apps: speechsounds and tictactoe (videos is disabled by default)
   const defaultEnabledApps = APPS.filter(app => !app.disabled && app.id !== 'videos').map(app => app.id);
   const [enabledApps, setEnabledApps] = useState<string[]>(profile?.enabledApps ?? defaultEnabledApps);
@@ -283,21 +271,15 @@ function SettingsProfileFormModal({
       return;
     }
 
-    const limit = parseInt(dailyTimeLimit, 10);
-    if (isNaN(limit) || limit < 1) {
-      setError('Daily time limit must be at least 1 minute');
-      return;
-    }
-
     try {
       setLoading(true);
       if (profile) {
         // Update existing profile
         await settingsProfilesApi.update(profile.id, { name, description });
-        await settingsProfilesApi.updateSettings(profile.id, { dailyTimeLimit: limit, enabledApps });
+        await settingsProfilesApi.updateSettings(profile.id, { enabledApps });
       } else {
         // Create new profile
-        await settingsProfilesApi.create({ name, description, dailyTimeLimit: limit, enabledApps });
+        await settingsProfilesApi.create({ name, description, enabledApps });
       }
       onSuccess();
     } catch (err: any) {
@@ -340,23 +322,6 @@ function SettingsProfileFormModal({
               placeholder="e.g., For daily use"
               className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-foreground mb-2">
-              Daily Time Limit (minutes) *
-            </label>
-            <input
-              type="number"
-              min="1"
-              value={dailyTimeLimit}
-              onChange={(e) => setDailyTimeLimit(e.target.value)}
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              Maximum minutes per day children can watch videos
-            </p>
           </div>
 
           <div className="mb-6">
