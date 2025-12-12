@@ -6,6 +6,15 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
+// Helper to create API instance without default JSON header (for FormData)
+const createFormDataApi = () => {
+  return axios.create({
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+    withCredentials: true
+    // No default Content-Type - let axios set it automatically for FormData
+  });
+};
+
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -200,4 +209,3 @@ export const magicCodeApi = {
 export const speechSoundsApi = {
   clearPronunciationsCache: () => api.delete('/speech-sounds/cache')
 };
-
