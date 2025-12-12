@@ -3,10 +3,9 @@ import { Video } from '../../types/api';
 interface VideoCardProps {
   video: Video;
   onClick: () => void;
-  disabled?: boolean;
 }
 
-export function VideoCard({ video, onClick, disabled = false }: VideoCardProps) {
+export function VideoCard({ video, onClick }: VideoCardProps) {
   const formatViews = (count: number): string => {
     if (count >= 1000000) {
       return `${(count / 1000000).toFixed(1)}M`;
@@ -32,10 +31,8 @@ export function VideoCard({ video, onClick, disabled = false }: VideoCardProps) 
   
   return (
     <div 
-      className={`cursor-pointer transition-all bg-card rounded-[20px] p-4 border border-border shadow-lg hover:-translate-y-1 hover:shadow-xl ${
-        disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
-      }`} 
-      onClick={disabled ? undefined : onClick}
+      className="cursor-pointer transition-all bg-card rounded-[20px] p-4 border border-border shadow-lg hover:-translate-y-1 hover:shadow-xl"
+      onClick={onClick}
     >
       <div className="relative w-full aspect-video overflow-hidden bg-muted rounded-xl group">
         <img 

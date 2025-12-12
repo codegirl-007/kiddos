@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChannelManager } from '../components/ChannelManager/ChannelManager';
-import { TimeLimitManager } from '../components/TimeLimitManager/TimeLimitManager';
 import { videosApi } from '../services/apiClient';
 
 export function VideosAdminPage() {
@@ -37,7 +36,7 @@ export function VideosAdminPage() {
           ← Back to Admin
         </Link>
         <h1 className="m-0 mb-2 text-[28px] font-medium text-foreground">Video App Settings</h1>
-        <p className="m-0 text-sm text-muted-foreground">Manage YouTube channels and video time limits</p>
+        <p className="m-0 text-sm text-muted-foreground">Manage YouTube channels</p>
         <div className="mt-4">
           <button
             onClick={handleRefreshVideos}
@@ -59,13 +58,8 @@ export function VideosAdminPage() {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 max-w-[1600px] mx-auto">
-        <div className="flex flex-col">
-          <ChannelManager />
-        </div>
-        <div className="flex flex-col">
-          <TimeLimitManager />
-        </div>
+      <div className="p-6 max-w-[1600px] mx-auto">
+        <ChannelManager />
       </div>
     </div>
   );
