@@ -122,9 +122,8 @@ export function DrawingPadApp() {
   }, []);
 
   // Set canvas size on mount and resize
-  const canvasRefCallback = useCallback((canvas: HTMLCanvasElement | null) => {
-    canvasRef.current = canvas;
-    if (canvas) {
+  useEffect(() => {
+    if (canvasRef.current) {
       setupCanvas();
     }
   }, [setupCanvas]);
@@ -223,7 +222,7 @@ export function DrawingPadApp() {
 
         <div className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden">
           <canvas
-            ref={canvasRefCallback}
+            ref={canvasRef}
             className={`w-full h-[600px] touch-none ${
               isEraser ? 'cursor-grab' : 'cursor-crosshair'
             }`}

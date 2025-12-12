@@ -6,15 +6,6 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
-// Helper to create API instance without default JSON header (for FormData)
-const createFormDataApi = () => {
-  return axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
-    withCredentials: true
-    // No default Content-Type - let axios set it automatically for FormData
-  });
-};
-
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -186,7 +177,7 @@ export const settingsProfilesApi = {
   
   getById: (id: number) => api.get(`/settings-profiles/${id}`),
   
-  create: (data: { name: string; description?: string; dailyTimeLimit: number; enabledApps?: string[] }) =>
+  create: (data: { name: string; description?: string; dailyTimeLimit?: number; enabledApps?: string[] }) =>
     api.post('/settings-profiles', data),
   
   update: (id: number, data: { name?: string; description?: string; isActive?: boolean }) =>
