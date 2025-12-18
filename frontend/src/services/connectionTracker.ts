@@ -106,23 +106,19 @@ export function setCurrentVideo(video: { title: string; channelName: string } | 
 }
 
 /**
- * Send a heartbeat to the server with the session ID, current route, video info, and time limit usage
+ * Send a heartbeat to the server with the session ID, current route, and video info
  */
 async function sendHeartbeat(): Promise<void> {
   try {
     const { settingsApi } = await import('./apiClient');
-    const { getTimeUsedToday, getDailyLimitSync } = await import('./timeLimitService');
     
     const sessionId = getSessionId();
     const route = getCurrentRoute();
-    const timeUsed = getTimeUsedToday();
-    const dailyLimit = getDailyLimitSync();
     
     await settingsApi.heartbeat(
       sessionId, 
       route, 
-      currentVideo ? { title: currentVideo.title, channelName: currentVideo.channelName } : undefined,
-      { timeUsed, dailyLimit }
+      currentVideo ? { title: currentVideo.title, channelName: currentVideo.channelName } : undefined
     );
   } catch (error) {
     // Silently fail - don't spam console with errors

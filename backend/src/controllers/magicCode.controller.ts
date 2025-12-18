@@ -49,11 +49,8 @@ export async function getSettingsByCode(req: Request, res: Response) {
       const key = row.setting_key as string;
       const value = row.setting_value as string;
       
-      // Parse numeric values
-      if (key === 'daily_time_limit_minutes') {
-        settings[key] = parseInt(value, 10);
-      } else if (key === 'enabled_apps') {
-        // Parse JSON array
+      // Parse JSON array for enabled_apps
+      if (key === 'enabled_apps') {
         try {
           settings[key] = JSON.parse(value);
         } catch (e) {
@@ -75,7 +72,6 @@ export async function getSettingsByCode(req: Request, res: Response) {
       data: {
         magicCode: profile.magic_code,
         settings,
-        dailyTimeLimit: settings.daily_time_limit_minutes || null,
         enabledApps
       }
     });

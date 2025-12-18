@@ -2,7 +2,6 @@ const MAGIC_CODE_KEY = 'magic_code';
 const MAGIC_CODE_SETTINGS_KEY = 'magic_code_settings';
 
 export interface MagicCodeSettings {
-  dailyTimeLimit: number | null;
   enabledApps: string[] | null;
   appliedAt: string;
 }
@@ -58,7 +57,6 @@ export async function applyMagicCode(code: string): Promise<MagicCodeSettings> {
   const response: any = await magicCodeApi.getSettingsByCode(normalizedCode);
   
   const settings: MagicCodeSettings = {
-    dailyTimeLimit: response.data.dailyTimeLimit,
     enabledApps: response.data.enabledApps || null,
     appliedAt: new Date().toISOString()
   };

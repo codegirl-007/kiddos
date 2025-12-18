@@ -50,7 +50,6 @@ export interface SettingsProfile {
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
-  dailyTimeLimit: number | null;
   enabledApps?: string[];
 }
 

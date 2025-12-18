@@ -124,12 +124,7 @@ export const videosApi = {
 
 // Settings API
 export const settingsApi = {
-  getTimeLimit: () => api.get('/settings/time-limit'),
-  
-  setTimeLimit: (dailyLimit: number) =>
-    api.put('/settings/time-limit', { dailyLimit }),
-  
-  heartbeat: (sessionId: string, route: string, video?: { title: string; channelName: string }, timeLimit?: { timeUsed: number; dailyLimit: number }) => api.post('/settings/heartbeat', { sessionId, route, videoTitle: video?.title, videoChannel: video?.channelName, timeUsed: timeLimit?.timeUsed, dailyLimit: timeLimit?.dailyLimit }),
+  heartbeat: (sessionId: string, route: string, video?: { title: string; channelName: string }) => api.post('/settings/heartbeat', { sessionId, route, videoTitle: video?.title, videoChannel: video?.channelName }),
   
   getConnectionStats: () => api.get('/settings/connection-stats')
 };
@@ -177,7 +172,7 @@ export const settingsProfilesApi = {
   
   getById: (id: number) => api.get(`/settings-profiles/${id}`),
   
-  create: (data: { name: string; description?: string; dailyTimeLimit?: number; enabledApps?: string[] }) =>
+  create: (data: { name: string; description?: string; enabledApps?: string[] }) =>
     api.post('/settings-profiles', data),
   
   update: (id: number, data: { name?: string; description?: string; isActive?: boolean }) =>
@@ -185,7 +180,7 @@ export const settingsProfilesApi = {
   
   delete: (id: number) => api.delete(`/settings-profiles/${id}`),
   
-  updateSettings: (id: number, settings: { dailyTimeLimit?: number; enabledApps?: string[] }) =>
+  updateSettings: (id: number, settings: { enabledApps?: string[] }) =>
     api.put(`/settings-profiles/${id}/settings`, settings),
   
   regenerateCode: (id: number) => api.post(`/settings-profiles/${id}/regenerate-code`)

@@ -73,9 +73,6 @@ export async function getAllProfiles(req: AuthRequest, res: Response) {
       
       return {
         ...profile,
-        dailyTimeLimit: profile.settings.daily_time_limit_minutes 
-          ? parseInt(profile.settings.daily_time_limit_minutes, 10) 
-          : null,
         enabledApps
       };
     });
@@ -168,9 +165,6 @@ export async function getProfile(req: AuthRequest, res: Response) {
         updatedAt: profile.updated_at,
         isActive: profile.is_active === 1,
         settings,
-        dailyTimeLimit: settings.daily_time_limit_minutes 
-          ? parseInt(settings.daily_time_limit_minutes, 10) 
-          : null,
         enabledApps
       }
     });
@@ -198,7 +192,7 @@ export async function createProfile(req: AuthRequest, res: Response) {
       });
     }
 
-    const { name, description, dailyTimeLimit, enabledApps } = req.body;
+    const { name, description, enabledApps } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({
@@ -206,16 +200,6 @@ export async function createProfile(req: AuthRequest, res: Response) {
         error: {
           code: 'INVALID_NAME',
           message: 'Name is required'
-        }
-      });
-    }
-
-    if (!dailyTimeLimit || typeof dailyTimeLimit !== 'number' || dailyTimeLimit < 1) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'INVALID_TIME_LIMIT',
-          message: 'Daily time limit must be a number greater than 0'
         }
       });
     }
@@ -233,15 +217,6 @@ export async function createProfile(req: AuthRequest, res: Response) {
     });
 
     const profileId = Number(profileResult.lastInsertRowid);
-
-    // Add settings
-    await db.execute({
-      sql: `
-        INSERT INTO settings_profile_values (profile_id, setting_key, setting_value)
-        VALUES (?, ?, ?)
-      `,
-      args: [profileId, 'daily_time_limit_minutes', dailyTimeLimit.toString()]
-    });
 
     // Add enabled apps if provided
     if (enabledApps && Array.isArray(enabledApps)) {
@@ -269,8 +244,7 @@ export async function createProfile(req: AuthRequest, res: Response) {
         description: createdProfile.rows[0].description,
         createdAt: createdProfile.rows[0].created_at,
         updatedAt: createdProfile.rows[0].updated_at,
-        isActive: createdProfile.rows[0].is_active === 1,
-        dailyTimeLimit
+        isActive: createdProfile.rows[0].is_active === 1
       }
     });
   } catch (error: any) {
@@ -487,7 +461,7 @@ export async function updateProfileSettings(req: AuthRequest, res: Response) {
       });
     }
 
-    const { dailyTimeLimit, enabledApps } = req.body;
+    const { enabledApps } = req.body;
 
     // Verify ownership
     const existing = await db.execute({
@@ -502,30 +476,6 @@ export async function updateProfileSettings(req: AuthRequest, res: Response) {
           code: 'PROFILE_NOT_FOUND',
           message: 'Profile not found or you do not have permission to update it'
         }
-      });
-    }
-
-    if (dailyTimeLimit !== undefined) {
-      if (typeof dailyTimeLimit !== 'number' || dailyTimeLimit < 1) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'INVALID_TIME_LIMIT',
-            message: 'Daily time limit must be a number greater than 0'
-          }
-        });
-      }
-
-      // Update or insert setting
-      await db.execute({
-        sql: `
-          INSERT INTO settings_profile_values (profile_id, setting_key, setting_value, updated_at)
-          VALUES (?, ?, ?, ?)
-          ON CONFLICT(profile_id, setting_key) DO UPDATE SET
-            setting_value = excluded.setting_value,
-            updated_at = excluded.updated_at
-        `,
-        args: [profileId, 'daily_time_limit_minutes', dailyTimeLimit.toString(), new Date().toISOString()]
       });
     }
 
@@ -553,24 +503,9 @@ export async function updateProfileSettings(req: AuthRequest, res: Response) {
       });
     }
 
-    // Get updated settings
-    const settingsResult = await db.execute({
-      sql: 'SELECT setting_key, setting_value FROM settings_profile_values WHERE profile_id = ?',
-      args: [profileId]
-    });
-
-    const settings: Record<string, string> = {};
-    for (const row of settingsResult.rows) {
-      settings[row.setting_key as string] = row.setting_value as string;
-    }
-
     res.json({
       success: true,
-      data: {
-        dailyTimeLimit: settings.daily_time_limit_minutes 
-          ? parseInt(settings.daily_time_limit_minutes, 10) 
-          : null
-      }
+      data: {}
     });
   } catch (error: any) {
     console.error('Update profile settings error:', error);

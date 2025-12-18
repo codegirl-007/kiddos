@@ -64,13 +64,6 @@ export function MagicCodeInput({ onApplied, onClose }: MagicCodeInputProps) {
     }
   };
 
-  const formatTime = (minutes: number | null) => {
-    if (!minutes) return 'Not set';
-    if (minutes < 60) return `${minutes} minutes`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins > 0 ? `${hours} hour${hours !== 1 ? 's' : ''} ${mins} minute${mins !== 1 ? 's' : ''}` : `${hours} hour${hours !== 1 ? 's' : ''}`;
-  };
 
   return (
     <div className="bg-card rounded-xl p-6 border border-border max-w-md w-full">
@@ -85,11 +78,6 @@ export function MagicCodeInput({ onApplied, onClose }: MagicCodeInputProps) {
           <p className="text-xs text-green-700">
             Code: <strong>{appliedCode}</strong>
           </p>
-          {settings.dailyTimeLimit && (
-            <p className="text-xs text-green-700 mt-1">
-              Daily time limit: <strong>{formatTime(settings.dailyTimeLimit)}</strong>
-            </p>
-          )}
           <button
             onClick={handleClear}
             className="mt-2 text-xs text-green-700 hover:underline"

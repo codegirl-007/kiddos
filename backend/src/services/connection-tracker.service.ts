@@ -10,8 +10,6 @@ interface Connection {
   route?: string;
   videoTitle?: string;
   videoChannel?: string;
-  timeUsed?: number; // minutes
-  dailyLimit?: number; // minutes
   lastHeartbeat: number;
   connectedAt: number;
 }
@@ -31,7 +29,7 @@ class ConnectionTracker {
   /**
    * Register or update a connection heartbeat
    */
-  heartbeat(sessionId: string, userId?: number, username?: string, route?: string, videoTitle?: string, videoChannel?: string, timeUsed?: number, dailyLimit?: number): void {
+  heartbeat(sessionId: string, userId?: number, username?: string, route?: string, videoTitle?: string, videoChannel?: string): void {
     const now = Date.now();
     const existing = this.connections.get(sessionId);
 
@@ -43,8 +41,6 @@ class ConnectionTracker {
       if (route !== undefined) existing.route = route;
       if (videoTitle !== undefined) existing.videoTitle = videoTitle;
       if (videoChannel !== undefined) existing.videoChannel = videoChannel;
-      if (timeUsed !== undefined) existing.timeUsed = timeUsed;
-      if (dailyLimit !== undefined) existing.dailyLimit = dailyLimit;
     } else {
       // New connection
       this.connections.set(sessionId, {
@@ -54,8 +50,6 @@ class ConnectionTracker {
         route,
         videoTitle,
         videoChannel,
-        timeUsed,
-        dailyLimit,
         lastHeartbeat: now,
         connectedAt: now
       });

@@ -4,63 +4,6 @@ import { getSetting, setSetting } from '../config/database.js';
 import { connectionTracker } from '../services/connection-tracker.service.js';
 import crypto from 'crypto';
 
-export async function getTimeLimit(req: AuthRequest, res: Response) {
-  try {
-    const limit = await getSetting('daily_time_limit_minutes');
-    const defaultLimit = 1; // Default 1 minute for testing
-    
-    res.json({
-      success: true,
-      data: {
-        dailyLimit: limit ? parseInt(limit, 10) : defaultLimit
-      }
-    });
-  } catch (error: any) {
-    console.error('Get time limit error:', error);
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'GET_TIME_LIMIT_ERROR',
-        message: 'Error fetching time limit'
-      }
-    });
-  }
-}
-
-export async function setTimeLimit(req: AuthRequest, res: Response) {
-  try {
-    const { dailyLimit } = req.body;
-    
-    if (!dailyLimit || typeof dailyLimit !== 'number' || dailyLimit < 1) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'INVALID_LIMIT',
-          message: 'Daily limit must be a number greater than 0'
-        }
-      });
-    }
-    
-    await setSetting('daily_time_limit_minutes', dailyLimit.toString());
-    
-    res.json({
-      success: true,
-      data: {
-        dailyLimit
-      }
-    });
-  } catch (error: any) {
-    console.error('Set time limit error:', error);
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'SET_TIME_LIMIT_ERROR',
-        message: 'Error setting time limit'
-      }
-    });
-  }
-}
-
 /**
  * Heartbeat endpoint - clients ping this to indicate they're active
  * Public endpoint - no auth required
@@ -85,23 +28,19 @@ export async function heartbeat(req: AuthRequest, res: Response) {
       });
     }
 
-    // Get route, video info, and time limit usage from request body
+    // Get route and video info from request body
     const route = req.body.route || '/';
     const videoTitle = req.body.videoTitle;
     const videoChannel = req.body.videoChannel;
-    const timeUsed = req.body.timeUsed;
-    const dailyLimit = req.body.dailyLimit;
 
-    // Register heartbeat (with user info if authenticated, current route, video info, and time limit usage)
+    // Register heartbeat (with user info if authenticated, current route, and video info)
     connectionTracker.heartbeat(
       sessionId,
       req.userId,
       req.username,
       route,
       videoTitle,
-      videoChannel,
-      timeUsed,
-      dailyLimit
+      videoChannel
     );
 
     res.json({
