@@ -81,6 +81,23 @@ export async function applyMagicCode(code: string): Promise<MagicCodeSettings> {
 }
 
 /**
+ * Re-fetch settings for the currently applied magic code (if any)
+ */
+export async function refreshMagicCodeSettings(): Promise<MagicCodeSettings | null> {
+  const currentCode = getAppliedMagicCode();
+  if (!currentCode) {
+    return null;
+  }
+
+  try {
+    return await applyMagicCode(currentCode);
+  } catch (error) {
+    console.warn('Failed to refresh magic code settings', error);
+    throw error;
+  }
+}
+
+/**
  * Clear the applied magic code and settings
  */
 export function clearMagicCode(): void {

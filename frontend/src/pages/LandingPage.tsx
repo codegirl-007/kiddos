@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { OptimizedImage } from '../components/OptimizedImage/OptimizedImage';
 import { MagicCodeInput } from '../components/MagicCodeInput/MagicCodeInput';
-import { getAppliedMagicCode, getMagicCodeSettings, hasActiveMagicCode } from '../services/magicCodeService';
+import { getAppliedMagicCode, getMagicCodeSettings, hasActiveMagicCode, refreshMagicCodeSettings } from '../services/magicCodeService';
 import { getEnabledApps } from '../utils/appFilter';
 
 const categoryEmojis: { [key: string]: string } = {
@@ -36,6 +36,29 @@ export function LandingPage() {
   const [enabledApps, setEnabledApps] = useState(getEnabledApps());
   const appliedCode = getAppliedMagicCode();
   const magicCodeSettings = getMagicCodeSettings();
+
+  // Refresh magic code settings from server on load (if a code exists)
+  useEffect(() => {
+    let isMounted = true;
+
+    async function syncMagicCodeSettings() {
+      if (!appliedCode) return;
+      try {
+        await refreshMagicCodeSettings();
+        if (isMounted) {
+          setEnabledApps(getEnabledApps());
+        }
+      } catch (error) {
+        console.warn('Failed to refresh magic code on load', error);
+      }
+    }
+
+    syncMagicCodeSettings();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [appliedCode]);
 
   // Re-check enabled apps when magic code is applied/cleared
   useEffect(() => {
