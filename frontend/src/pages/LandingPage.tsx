@@ -124,13 +124,24 @@ export function LandingPage() {
                       />
                     ) : app.id === 'iframegame' ? (
                       <OptimizedImage 
-                        src="/magic-wand.png" 
+                        src="/drawing.png" 
                         alt="Embedded Game" 
                         className="w-20 h-20 object-contain"
                         width={80}
                         height={80}
                         loading="eager"
                         fetchPriority="auto"
+                      />
+                    ) : app.id === 'lemonade-stand' ? (
+                      <OptimizedImage 
+                        src="/juice.png" 
+                        alt="Lemonade Stand" 
+                        className="w-20 h-20 object-contain"
+                        width={80}
+                        height={80}
+                        loading="eager"
+                        fetchPriority="auto"
+                        disableWebP={true}
                       />
                     ) : (
                       <span className="text-5xl">{emoji}</span>
