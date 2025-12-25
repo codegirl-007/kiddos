@@ -5,6 +5,7 @@ const VideoApp = lazy(() => import('../pages/VideoApp').then(module => ({ defaul
 const SpeechSoundsApp = lazy(() => import('../pages/SpeechSoundsApp').then(module => ({ default: module.SpeechSoundsApp })));
 const TicTacToeApp = lazy(() => import('../pages/TicTacToeApp').then(module => ({ default: module.TicTacToeApp })));
 const DrawingPadApp = lazy(() => import('../pages/DrawingPadApp').then(module => ({ default: module.DrawingPadApp })));
+const GameIframeApp = lazy(() => import('../pages/GameIframeApp').then(module => ({ default: module.GameIframeApp })));
 
 export type App = {
   id: string;
@@ -52,5 +53,14 @@ export const APPS: App[] = [
     link: '/drawing-pad',
     disabled: false,
     component: DrawingPadApp
+  },
+  {
+    id: 'iframegame',
+    name: 'Embedded Game',
+    description: 'Launch an external game without leaving Kiddos.',
+    cta: 'Open Game',
+    link: '/embedded-game',
+    disabled: false,
+    component: GameIframeApp
   }
 ];

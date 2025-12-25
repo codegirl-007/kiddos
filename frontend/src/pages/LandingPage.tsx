@@ -9,6 +9,8 @@ const categoryEmojis: { [key: string]: string } = {
   videos: '📺',
   speechsounds: '🗣️',
   tictactoe: '⭕',
+  drawingpad: '🎨',
+  iframegame: '🕹️',
   all: '🎮',
 };
 
@@ -17,6 +19,7 @@ const categoryColors: { [key: string]: string } = {
   speechsounds: 'purple',
   tictactoe: 'blue',
   drawingpad: 'amber',
+  iframegame: 'green',
 };
 
 const colorMap: { [key: string]: string } = {
@@ -117,6 +120,16 @@ export function LandingPage() {
                         loading="eager"
                         fetchPriority="auto"
                         disableWebP={true}
+                      />
+                    ) : app.id === 'iframegame' ? (
+                      <OptimizedImage 
+                        src="/magic-wand.png" 
+                        alt="Embedded Game" 
+                        className="w-20 h-20 object-contain"
+                        width={80}
+                        height={80}
+                        loading="eager"
+                        fetchPriority="auto"
                       />
                     ) : (
                       <span className="text-5xl">{emoji}</span>
