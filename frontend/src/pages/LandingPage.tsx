@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { OptimizedImage } from '../components/OptimizedImage/OptimizedImage';
 import { MagicCodeInput } from '../components/MagicCodeInput/MagicCodeInput';
-import { getAppliedMagicCode } from '../services/magicCodeService';
+import { getAppliedMagicCode, getMagicCodeSettings, hasActiveMagicCode } from '../services/magicCodeService';
 import { getEnabledApps } from '../utils/appFilter';
 
 const categoryEmojis: { [key: string]: string } = {
@@ -35,11 +35,12 @@ export function LandingPage() {
   const [showMagicCodeModal, setShowMagicCodeModal] = useState(false);
   const [enabledApps, setEnabledApps] = useState(getEnabledApps());
   const appliedCode = getAppliedMagicCode();
+  const magicCodeSettings = getMagicCodeSettings();
 
   // Re-check enabled apps when magic code is applied/cleared
   useEffect(() => {
     setEnabledApps(getEnabledApps());
-  }, [appliedCode]);
+  }, [appliedCode, magicCodeSettings?.enabledApps?.join(',')]);
 
   return (
     <div className="bg-background">
@@ -57,7 +58,7 @@ export function LandingPage() {
       
       <section className="px-4 py-8">
         <div className="max-w-5xl mx-auto">
-          {!appliedCode && (
+          {!hasActiveMagicCode() && (
             <div className="mb-6 text-center">
               <button
                 onClick={() => setShowMagicCodeModal(true)}

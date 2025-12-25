@@ -34,6 +34,13 @@ export function getMagicCodeSettings(): MagicCodeSettings | null {
 }
 
 /**
+ * Returns true only if both the code and its settings exist
+ */
+export function hasActiveMagicCode(): boolean {
+  return !!(getAppliedMagicCode() && getMagicCodeSettings());
+}
+
+/**
  * Check if a magic code is currently applied
  */
 export function hasMagicCode(): boolean {
