@@ -7,6 +7,15 @@ const TicTacToeApp = lazy(() => import('../pages/TicTacToeApp').then(module => (
 const DrawingPadApp = lazy(() => import('../pages/DrawingPadApp').then(module => ({ default: module.DrawingPadApp })));
 const GameIframeApp = lazy(() => import('../pages/GameIframeApp').then(module => ({ default: module.GameIframeApp })));
 
+const LemonadeStandApp: React.FC = () =>
+  React.createElement(GameIframeApp, {
+    iframeUrl: 'https://shark-app-su4b5.ondigitalocean.app/',
+    badgeText: 'Arcade Corner',
+    title: 'Lemonade Stand',
+    description: 'Watch the forecast, buy supplies, and try to turn a profit.',
+    footerNote: 'Hosted externally on DigitalOcean.'
+  });
+
 export type App = {
   id: string;
   name: string;
@@ -55,12 +64,12 @@ export const APPS: App[] = [
     component: DrawingPadApp
   },
   {
-    id: 'iframegame',
-    name: 'Embedded Game',
-    description: 'Launch an external game without leaving Kiddos.',
-    cta: 'Open Game',
+    id: 'lemonade-stand',
+    name: 'Lemonade Stand',
+    description: 'Run a virtual stand without leaving Kiddos.',
+    cta: 'Play Lemonade',
     link: '/embedded-game',
     disabled: false,
-    component: GameIframeApp
+    component: LemonadeStandApp
   }
 ];

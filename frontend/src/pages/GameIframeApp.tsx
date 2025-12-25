@@ -1,44 +1,70 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-const IFRAME_URL = 'https://www.google.com';
+type GameIframeAppProps = {
+  iframeUrl: string;
+  badgeText?: string;
+  title?: string;
+  description?: string;
+  footerNote?: string;
+};
 
-export function GameIframeApp() {
+const DEFAULT_CONFIG = {
+  badgeText: 'Arcade Corner',
+  title: 'Embedded Game View',
+  description: 'Enjoy a game inside Kiddos while keeping all of our safety tools and controls handy.',
+  footerNote: 'Content below is provided by an external site.'
+};
+
+export function GameIframeApp({
+  iframeUrl,
+  badgeText,
+  title,
+  description,
+  footerNote
+}: GameIframeAppProps) {
   const [loading, setLoading] = useState(true);
 
-  return (
-    <div className="min-h-screen bg-background px-4 py-8">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <header className="text-center space-y-2">
-          <p className="text-sm uppercase tracking-widest text-muted-foreground">Arcade Corner</p>
-          <h1 className="text-4xl font-bold text-primary">Embedded Game View</h1>
-          <p className="text-muted-foreground">
-            Enjoy a game inside Kiddos while keeping all of our safety tools and controls handy.
-          </p>
-        </header>
+  const config = useMemo(
+    () => ({
+      iframeUrl,
+      badgeText: badgeText || DEFAULT_CONFIG.badgeText,
+      title: title || DEFAULT_CONFIG.title,
+      description: description || DEFAULT_CONFIG.description,
+      footerNote: footerNote || DEFAULT_CONFIG.footerNote
+    }),
+    [iframeUrl, badgeText, title, description, footerNote]
+  );
 
-        <div className="bg-card border border-border rounded-3xl shadow-2xl overflow-hidden">
+  if (!config.iframeUrl) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground">
+        Missing iframeUrl for embedded game.
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen w-full bg-background flex flex-col">
+
+      <div className="flex-1 w-full flex flex-col">
+        <div className="flex-1 w-full bg-card border border-border  overflow-hidden flex flex-col">
           {loading && (
             <div className="p-4 text-center text-muted-foreground text-sm bg-muted">
               Loading embedded game...
             </div>
           )}
           <iframe
-            src={IFRAME_URL}
+            src={config.iframeUrl}
             title="Embedded Game"
-            className="w-full min-h-[75vh] border-0"
+            className="w-full h-full flex-1 border-0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
             allowFullScreen
             onLoad={() => setLoading(false)}
           />
         </div>
-
-        <div className="text-center text-xs text-muted-foreground">
-          Content below is provided by an external site. Replace the URL in `GameIframeApp.tsx` when your game is ready.
-        </div>
       </div>
     </div>
   );
 }
-
 
