@@ -59,7 +59,7 @@ export function RegisterPage() {
     
     try {
       const { authApi } = await import('../services/apiClient');
-      const response: any = await authApi.register(username, password, dateOfBirth);
+      await authApi.register(username, password, dateOfBirth);
       
       // Registration endpoint returns tokens and user data, same as login
       // Use login function to set user and token in auth context
