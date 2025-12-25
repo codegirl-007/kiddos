@@ -6,6 +6,30 @@ export const loginSchema = z.object({
   password: z.string().min(8)
 });
 
+export const registerSchema = z.object({
+  username: z.string().min(3).max(50),
+  password: z.string().min(8),
+  dateOfBirth: z.string().refine((dateStr) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return false;
+    
+    // Check if user is at least 18 years old
+    const today = new Date();
+    const age = today.getFullYear() - date.getFullYear();
+    const monthDiff = today.getMonth() - date.getMonth();
+    const dayDiff = today.getDate() - date.getDate();
+    
+    let actualAge = age;
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      actualAge--;
+    }
+    
+    return actualAge >= 18;
+  }, {
+    message: 'You must be at least 18 years old to register'
+  })
+});
+
 export const addChannelSchema = z.object({
   channelInput: z.string().min(1)
 });

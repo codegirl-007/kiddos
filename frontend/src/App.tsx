@@ -19,6 +19,7 @@ const StatsAdminPage = lazy(() => import('./pages/StatsAdminPage').then(module =
 const UsersAdminPage = lazy(() => import('./pages/UsersAdminPage').then(module => ({ default: module.UsersAdminPage })));
 const SettingsProfilesAdminPage = lazy(() => import('./pages/SettingsProfilesAdminPage').then(module => ({ default: module.SettingsProfilesAdminPage })));
 const LoginPage = lazy(() => import('./pages/LoginPage').then(module => ({ default: module.LoginPage })));
+const RegisterPage = lazy(() => import('./pages/RegisterPage').then(module => ({ default: module.RegisterPage })));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -67,6 +68,7 @@ function App() {
                   ))}
                   {/* Keep non-app routes separate */}
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
                   <Route
                     path="/admin"
                     element={

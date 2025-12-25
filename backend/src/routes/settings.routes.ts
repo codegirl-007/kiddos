@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { heartbeat, getConnectionStats } from '../controllers/settings.controller.js';
+import { authMiddleware } from '../middleware/auth.js';
+import { adminMiddleware } from '../middleware/admin.js';
 import { optionalAuthMiddleware } from '../middleware/optionalAuth.js';
 
 const router = Router();

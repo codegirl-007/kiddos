@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 export function LoginPage() {
@@ -27,7 +27,7 @@ export function LoginPage() {
   };
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+    <div className="flex items-start justify-center bg-background px-4 pt-12 pb-8">
       <div className="w-full max-w-md bg-card rounded-3xl shadow-lg overflow-hidden border border-border">
         <div className="px-8 pt-8 pb-6 text-center border-b border-border">
           <h1 className="text-2xl font-bold text-foreground mb-2">Admin Login</h1>
@@ -75,10 +75,22 @@ export function LoginPage() {
           <button 
             type="submit" 
             disabled={loading} 
-            className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl font-semibold text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+            className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl font-semibold text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md mb-4"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
+          
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Don't have an account?{' '}
+              <Link 
+                to="/register" 
+                className="text-primary hover:underline font-semibold"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </div>
