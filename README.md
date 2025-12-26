@@ -1,9 +1,3 @@
-# Kiddos - YouTube Channel Video Aggregator
-
-A full-stack application for aggregating and displaying videos from multiple YouTube channels with a protected admin dashboard.
-
-## Tech Stack
-
 **Frontend:**
 - React 18 with TypeScript
 - Vite for build tooling
