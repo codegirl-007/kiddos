@@ -13,7 +13,7 @@ export async function getAllVideos(req: AuthRequest, res: Response) {
     const offset = (pageNum - 1) * limitNum;
     
     // Build query
-    let whereClause = 'v.duration_seconds >= 600';
+    let whereClause = 'v.duration_seconds >= 120';
     const args: any[] = [];
     
     if (channelId) {
@@ -183,4 +183,3 @@ async function refreshAllChannelsAsync() {
     await setRefreshInProgress(false);
   }
 }
-
