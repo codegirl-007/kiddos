@@ -8,7 +8,7 @@ export function VideosAdminPage() {
   const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
   const [refreshError, setRefreshError] = useState<string | null>(null);
 
-  const handleRefreshVideos = async () => {
+  const runRefresh = async (successPrefix: string) => {
     setRefreshing(true);
     setRefreshMessage(null);
     setRefreshError(null);
@@ -17,7 +17,7 @@ export function VideosAdminPage() {
       const response = await videosApi.refresh();
       const data = response.data;
       setRefreshMessage(
-        `Refreshed ${data.channelsRefreshed} channel(s). Added ${data.videosAdded} video(s).`
+        `${successPrefix} ${data.channelsRefreshed} channel(s). Added ${data.videosAdded} video(s).`
       );
     } catch (err: any) {
       setRefreshError(err.response?.data?.error?.message || 'Failed to refresh videos');
@@ -25,6 +25,9 @@ export function VideosAdminPage() {
       setRefreshing(false);
     }
   };
+
+  const handleRefreshVideos = () => runRefresh('Refreshed');
+  const handleClearCache = () => runRefresh('Cleared cache and refreshed');
 
   return (
     <div className="min-h-[calc(100vh-60px)] bg-background">
@@ -37,13 +40,20 @@ export function VideosAdminPage() {
         </Link>
         <h1 className="m-0 mb-2 text-[28px] font-medium text-foreground">Video App Settings</h1>
         <p className="m-0 text-sm text-muted-foreground">Manage YouTube channels</p>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap justify-center gap-3">
           <button
             onClick={handleRefreshVideos}
             disabled={refreshing}
             className="px-5 py-2.5 bg-primary text-primary-foreground border-none rounded-lg text-sm font-semibold cursor-pointer transition-all shadow-md hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {refreshing ? 'Refreshing...' : '🔄 Refresh All Videos'}
+          </button>
+          <button
+            onClick={handleClearCache}
+            disabled={refreshing}
+            className="px-5 py-2.5 bg-muted text-foreground border border-border rounded-lg text-sm font-semibold cursor-pointer transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {refreshing ? 'Refreshing...' : '🧹 Clear Cache'}
           </button>
           {refreshMessage && (
             <div className="mt-3 px-3 py-2 rounded-md text-sm font-medium bg-green-100 text-green-800 border border-green-200">
